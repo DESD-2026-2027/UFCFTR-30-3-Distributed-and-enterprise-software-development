@@ -1,28 +1,28 @@
-## Sprint Goal
+Sprint Goal
 
 Deliver a strategic BPMN model of the marketplace, a scoped pair of major functionalities agreed with the module team, and an initial product backlog and sprint plan, with a clear repository history from every member.
 
 ## Task Plan
 
-### Done
+ Done
 - [x] Create GitHub repository (Sadik)
 - [x] Divide team roles (all)
 - [x] Write Sprint 1 plan (all)
 
-### Thu 22 Oct: Setup
+ Thu 22 Oct: Setup
 - [ ] Finish Monday.com board with all sprint deadlines and owners (Rayamn)
 - [ ] Add module leaders to the repo and protect `main` (Sadik)
 - [ ] Commit README with team, roles and board link (Sadik)
 - [ ] Prepare individual stand-up updates (all)
 
-### Fri 23 Oct: Scope and analysis
+ Fri 23 Oct: Scope and analysis
 - [ ] Write `docs/functional-scope-proposal.md`: two functionalities, rationale, confirmation boundary, actor-to-responsibility table (Nour)
 - [ ] Write `docs/stakeholders.md` (Rayamn)
 - [ ] Write `docs/business-rules.md`: 5% commission, decline retry, payment outage handling (Fares)
 - [ ] Draft `docs/data-model.md` (Sadik)
 - [ ] Open PRs and review each other's work (all)
 
-### Sat 24 to Mon 26 Oct: Strategic BPMN
+ Sat 24 to Mon 26 Oct: Strategic BPMN
 - [ ] Draft Customer and Producers pools (Rayamn)
 - [ ] Draft Payment Service pool and payment message flows (Fares)
 - [ ] Draft Logistics/Collection pool (Sadik)
@@ -36,24 +36,24 @@ Deliver a strategic BPMN model of the marketplace, a scoped pair of major functi
 - [ ] Message flows are dashed and run between pools only
 - [ ] No form fields or micro-level logic
 
-### Mon 26 to Tue 27 Oct: Backlog and sprint plan
+ Mon 26 to Tue 27 Oct: Backlog and sprint plan
 - [ ] Write user stories, including delivery/collection, order confirmation and payment service outage (Rayamn, Fares)
 - [ ] Add MoSCoW priorities and Gherkin acceptance criteria (Rayamn)
 - [ ] Mirror stories on the board with Sprint 1/2/3 milestones (Rayamn)
 - [ ] Commit `docs/product-backlog.md` (Rayamn)
 
-### Wed 28 Oct: Agreement and audit
+ Wed 28 Oct: Agreement and audit
 - [ ] Get tutor sign-off on the two functionalities and record the feedback in `docs/` (Nour)
 - [ ] Check every member has merged PRs and commits; reassign a review or documentation task if not (Sadik)
 - [ ] Check the README links to the BPMN, scope document, backlog and this plan (Sadik)
 - [ ] Draft Contribution Matrix (Sadik)
 
-### Thu 29 Oct: Submission day (before 14:00)
+ Thu 29 Oct: Submission day (before 14:00)
 - [ ] Final read-through of all artefacts (all)
 - [ ] Tag and push: `git tag -a v1.0-sprint1 -m "Sprint 1: Strategic BPMN and backlog"` then `git push origin v1.0-sprint1` (Sadik)
 - [ ] Rehearse explanations so every member can answer questions (all)
 
-## Dependencies and Risks
+ Dependencies and Risks
 
 | Risk | Impact | Mitigation |
 |---|---|---|
