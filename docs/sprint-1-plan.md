@@ -16,10 +16,10 @@ Deliver a strategic BPMN model of the marketplace, a scoped pair of major functi
 - [x] Write Sprint 1 plan (all)
 
 ### Thu 22 Oct: Setup
-- [ ] Finish Monday.com board with all sprint deadlines and owners (Rayan)
+- [x] Finish Monday.com board with all sprint deadlines and owners (Rayan)
 - [ ] Add module leaders to the repo and protect `main` (Sadik)
-- [ ] Commit README with team, roles and board link (Sadik)
-- [ ] Prepare individual stand-up updates (all)
+- [x] Commit README with team, roles and board link (Sadik)
+- [x] Prepare individual stand-up updates (all)
 
 ### Fri 23 Oct: Scope and analysis
 - [ ] Write `docs/functional-scope-proposal.md`: two functionalities, rationale, confirmation boundary, actor-to-responsibility table (Nour)
