@@ -12,7 +12,7 @@
 | # | Section | Needed for | Status |
 |---|---|---|---|
 | 1 | [Scope and method](#1-scope-and-method) | Sprint 1 | Done |
-| 2 | [Stakeholder identification](#2-stakeholder-identification) | Sprint 1 | Done; profiles in 2.4 drafted; SH7 decision open |
+| 2 | [Stakeholder identification](#2-stakeholder-identification) | Sprint 1 | Done |
 | 3 | [Derived requirements](#3-derived-requirements) | Sprint 1 (backlog) | Drafted; 15 questions in 3.6 open |
 | 4 | [User stories](#4-user-stories) | Sprint 1 (`docs/product-backlog.md`) | **Do now** |
 | 5 | [Prioritisation: power/interest grid](#5-prioritisation-powerinterest-grid) | Sprint 1 if time allows | Drafted |
@@ -44,17 +44,164 @@
 
 ### 2.1 Stakeholder register
 
-| ID | Stakeholder | Role and key expectation | Local / Virtual | UC2 | Evidence |
-|---|---|---|---|---|---|
-| SH1 | Young professionals and families | Buy local produce without visiting several farm shops in limited opening hours | Local | Core | Case study, Background |
-| SH2 | Community groups (schools, care facilities, voluntary organisations) | Reliable, consistent local supply for catering | Local | Core | Case study, Background |
-| SH3 | Independent restaurants and cafés | Source locally from many producers without the admin of separate relationships | Local | Core | Case study, Background |
-| SH4 | Low-tech producers (email/phone ordering) | Cut ~15 h/week spent on customer communication; be notified of orders with at least 48 h lead time; amount owed recorded with a transparent audit trail | Local | Core | Case study, Producers; UC2 |
-| SH5 | Digitally basic producers (social media) | Manage orders despite limited technical expertise and resources; same lead-time and audit-trail needs as SH4 | Local | Core | Case study, Producers; UC2 |
-| SH6 | Bristol Regional Food Network (owner) | Grow the network of 40 SMEs beyond farmers' markets and farm gate sales; 5% commission calculated automatically | Local | Core | Case study, Background and Core Functionality; UC2 |
-| SH7 | Marketplace administrator | Resolve failed payments and exceptions; oversee orders and incidents | Local | To confirm | UC3 names the role; UC2 exception path (the proposal automates it) |
-| SH8 | Payment service provider (sandbox) | Authorise payments; returns success, decline (from card issuer) or unavailable | Virtual | Core | Case study disclaimer; UC2 |
-| SH9 | Development team | Deliver within sprints using Camunda and sandbox payments only | Local | Supporting | Assessment brief |
+| ID | Stakeholder | Wants | Cares about | Relies on | Local / Virtual | UC2 | Evidence |
+|---|---|---|---|---|---|---|---|
+| SH1 | Young professionals and families | Add products from several producers to one basket; basket accepted; know delivery or collection; order paid and confirmed | Convenient buying outside farm-shop hours; seamless checkout; clear supplier information; secure payment and data | Platform (stock check, confirmation); producers (supply); payment provider | Local | Core | Case study, Background, Customers; UC2 |
+| SH2 | Community groups (schools, care facilities, voluntary organisations) | Add products from several producers to one basket; basket accepted; know delivery or collection; order paid and confirmed; local supply for catering | Reliable, consistent supply | Platform; producers for consistent supply | Local | Core | Case study, Background |
+| SH3 | Independent restaurants and cafés | Add products from several producers to one basket; basket accepted; know delivery or collection; order paid and confirmed; many producers in one order | Low admin across many small suppliers | Platform to split the order by producer | Local | Core | Case study, Background; UC2 para 4 |
+| SH4 | Low-tech producers (email/phone ordering) | Cut ~15 h/week of customer communication; notified of orders with at least 48 h notice; amount owed recorded | Little technical effort; transparent audit trail | Platform (notification, commission, orders released only once paid); customers for orders | Local | Core | Case study, Producers; UC2 |
+| SH5 | Digitally basic producers (social media) | Manage orders despite limited technical expertise and resources; cut customer communication; notified of orders with at least 48 h notice; amount owed recorded | Little technical effort; transparent audit trail | Platform (notification, commission, orders released only once paid); customers for orders | Local | Core | Case study, Producers; UC2 |
+| SH6 | Bristol Regional Food Network (owner) | Grow the network of 40 SMEs; 5% commission calculated automatically; one checkout for multi-vendor orders | Viable business; revenue protected if payment fails; compliance; traceable records | Producers (stock, fulfilment); customers (orders); payment provider; regulators' rules | Local | Core | Case study, Background and Core Functionality; UC2 |
+| SH7 | Payment service provider (sandbox) | Authorise or decline each payment (success, decline from card issuer, or unavailable) | None stated | Platform for a payment request with a unique order reference | Virtual | Core | Case study disclaimer; UC2 |
+| SH8 | Development team | Deliver within sprints using Camunda and sandbox payments only | None stated | Module team for scope sign-off | Local | Supporting | Assessment brief |
+
+### 2.1.1 Stakeholder profiles
+
+One profile per stakeholder in the register. Goals and softgoals are named directly in each profile so the i* models can reuse the wording. Influence and interest follow the grid in section 5. Where the sources are silent the profile says "Not stated" rather than guessing; items marked (inferred) are my reading of the case study.
+
+#### SH1: Young professionals and families
+
+| Field | Detail |
+|---|---|
+| **Who they are** | Local individual buyers who want to buy from regional producers outside farm-shop opening hours. |
+| **Type** | Human, External |
+| **Role in Use Case 2** | Builds a basket from one or several producers, amends it if stock is short, chooses delivery or collection, reviews and confirms the order, pays, retries if declined, and receives confirmation. |
+| **Functionalities involved** | Both (F1 and F2) |
+| **Current problems (pain points)** | Farm shops are only open at limited hours; buying from several producers means dealing with each one separately (inferred). |
+| **Goals (things they want done)** | • Add products from several producers to one basket<br>• Have the basket accepted (stock confirmed)<br>• Know the delivery or collection arrangements<br>• Pay and receive order confirmation |
+| **Softgoals (qualities they care about)** | • Convenient buying<br>• Seamless checkout<br>• Clear supplier information<br>• Secure payment and personal data |
+| **Depends on** | The platform for the stock check and confirmation; producers for supply; the payment provider for authorisation. |
+| **Others depend on them for** | Orders and payment (network owner, producers). |
+| **Concerns and risks** | An item unavailable at checkout; payment declined or the payment service down; payment and personal data exposed. |
+| **Influence / Interest** | Low, High → Keep informed |
+| **Source** | CS Background, Customers; UC2 |
+| **Used later in** | i* actor "Customer"; BPMN pool/lane "Customer" |
+
+#### SH2: Community groups (schools, care facilities, voluntary organisations)
+
+| Field | Detail |
+|---|---|
+| **Who they are** | Organisations that regularly source local food for catering. |
+| **Type** | Organisation, External |
+| **Role in Use Case 2** | Builds a basket, chooses delivery or collection, confirms the order, pays and receives confirmation. |
+| **Functionalities involved** | Both (F1 and F2) |
+| **Current problems (pain points)** | Not stated beyond the need for a dependable local supply. |
+| **Goals (things they want done)** | • Add products from several producers to one basket<br>• Have the basket accepted (stock confirmed)<br>• Know the delivery or collection arrangements<br>• Pay and receive order confirmation<br>• Obtain local supply for catering |
+| **Softgoals (qualities they care about)** | • Reliable, consistent supply<br>• Seamless checkout |
+| **Depends on** | The platform; producers for consistent supply. |
+| **Others depend on them for** | Orders and payment. |
+| **Concerns and risks** | Whether they can pay by invoice rather than card (open question in 2.3); a supply failure affecting catering. |
+| **Influence / Interest** | Low, High → Keep informed |
+| **Source** | CS Background |
+| **Used later in** | i* actor "Customer" (specialisation or same actor as SH1); BPMN lane "Customer" |
+
+#### SH3: Independent restaurants and cafés
+
+| Field | Detail |
+|---|---|
+| **Who they are** | Local food businesses that want to source from many small producers. |
+| **Type** | Organisation, External |
+| **Role in Use Case 2** | Multi-vendor checkout, relying on the platform to split one order across producers. |
+| **Functionalities involved** | Both (F1 and F2) |
+| **Current problems (pain points)** | Ordering from many small suppliers means a lot of administration. |
+| **Goals (things they want done)** | • Add products from several producers to one basket<br>• Have the basket accepted (stock confirmed)<br>• Know the delivery or collection arrangements<br>• Pay and receive order confirmation<br>• Order from many producers in one order |
+| **Softgoals (qualities they care about)** | • Low administration across many suppliers<br>• Seamless checkout |
+| **Depends on** | The platform to split the order by producer. |
+| **Others depend on them for** | Orders and payment; larger multi-vendor baskets. |
+| **Concerns and risks** | Whether they can pay by invoice rather than card (open question in 2.3); a split order where one producer cannot fulfil its part. |
+| **Influence / Interest** | Low, High → Keep informed |
+| **Source** | CS Background; UC2 para 4 |
+| **Used later in** | i* actor "Customer"; BPMN lane "Customer" |
+
+#### SH4: Low-tech producers (email and phone ordering)
+
+| Field | Detail |
+|---|---|
+| **Who they are** | Small producers in the network of 40 SMEs who currently take orders by email and phone. |
+| **Type** | Human / Organisation, External |
+| **Role in Use Case 2** | Supplies stock that is checked at checkout; is notified of their own order element after payment succeeds; has the amount owed recorded. |
+| **Functionalities involved** | Both (F1 stock and fulfilment options; F2 notification and amount owed) |
+| **Current problems (pain points)** | About 15 hours a week spent on customer communication; little technical capacity. |
+| **Goals (things they want done)** | • Receive orders without manual customer communication<br>• Be notified with at least 48 hours' notice<br>• Have the amount owed recorded |
+| **Softgoals (qualities they care about)** | • Little technical effort<br>• Transparent audit trail<br>• Adequate lead time |
+| **Depends on** | The platform for notification, commission calculation and releasing orders only once paid; customers for orders. |
+| **Others depend on them for** | Stock and fulfilment (customers, network owner). |
+| **Concerns and risks** | Notification arrives by a channel they do not use (open question); less than 48 hours' notice (T1); commission reducing earnings (T2); no payout step in scope (Q1). |
+| **Influence / Interest** | High, High → Manage closely |
+| **Source** | CS Producers; UC2 |
+| **Used later in** | i* actor "Producer"; BPMN pool/lane "Producer" |
+
+#### SH5: Digitally basic producers (social media)
+
+| Field | Detail |
+|---|---|
+| **Who they are** | Small producers in the network who sell mainly through social media. |
+| **Type** | Human / Organisation, External |
+| **Role in Use Case 2** | Supplies stock that is checked at checkout; is notified of their own order element after payment succeeds; has the amount owed recorded. |
+| **Functionalities involved** | Both (F1 and F2) |
+| **Current problems (pain points)** | Limited technical expertise and resources to manage orders. |
+| **Goals (things they want done)** | • Receive orders without manual customer communication<br>• Be notified with at least 48 hours' notice<br>• Have the amount owed recorded<br>• Manage orders despite limited expertise and resources |
+| **Softgoals (qualities they care about)** | • Little technical effort<br>• Transparent audit trail<br>• Adequate lead time |
+| **Depends on** | The platform for notification, commission calculation and releasing orders only once paid; customers for orders. |
+| **Others depend on them for** | Stock and fulfilment (customers, network owner). |
+| **Concerns and risks** | Notification arrives by a channel they do not use (open question); less than 48 hours' notice (T1); commission reducing earnings (T2); no payout step in scope (Q1); less capacity to cope with a platform that assumes technical skill. |
+| **Influence / Interest** | High, High → Manage closely |
+| **Source** | CS Producers; UC2 |
+| **Used later in** | i* actor "Producer" (same actor as SH4 unless the models need to distinguish them); BPMN pool/lane "Producer" |
+
+#### SH6: Bristol Regional Food Network (owner)
+
+| Field | Detail |
+|---|---|
+| **Who they are** | The organisation that runs the marketplace and the network of 40 SMEs within a 20-mile area. |
+| **Type** | Organisation, Internal |
+| **Role in Use Case 2** | Owns the checkout; takes a 5% commission on each producer order; needs revenue protected if payment fails. |
+| **Functionalities involved** | Both (F1 order segregation; F2 commission and settlement records) |
+| **Current problems (pain points)** | Not stated directly; the case study frames the need to grow the network and replace manual commission handling (inferred). |
+| **Goals (things they want done)** | • Grow the network of 40 SMEs<br>• Calculate the 5% commission automatically<br>• Offer one checkout for multi-vendor orders |
+| **Softgoals (qualities they care about)** | • Viable business<br>• Revenue protected<br>• Regulatory compliance<br>• Traceable records |
+| **Depends on** | Producers for stock and fulfilment; customers for orders; the payment provider for authorisation; regulators' rules. |
+| **Others depend on them for** | The marketplace itself and the rules it runs under (producers, customers). |
+| **Concerns and risks** | Failed or pending payments losing revenue; non-compliance with data protection and financial regulations; traceability against data minimisation (T6). |
+| **Influence / Interest** | High, High → Manage closely |
+| **Source** | CS Background and Core Functionality; UC2 |
+| **Used later in** | i* actor "Network Owner / Marketplace"; BPMN pool "Marketplace" |
+
+#### SH7: Payment service provider (sandbox)
+
+| Field | Detail |
+|---|---|
+| **Who they are** | An external, simulated payment service used for all payments. |
+| **Type** | System, External |
+| **Role in Use Case 2** | Authorises or declines each payment; may be unavailable (timeout or 503). |
+| **Functionalities involved** | F2 |
+| **Current problems (pain points)** | Not applicable (an external system); its failures are what the retry design handles. |
+| **Goals (things they want done)** | • Authorise or decline each payment request |
+| **Softgoals (qualities they care about)** | • Not stated |
+| **Depends on** | The platform for a payment request with a unique order reference. |
+| **Others depend on them for** | Payment authorisation (customers, network owner, order confirmation). |
+| **Concerns and risks** | Timeouts and 503s; duplicate submissions of the same reference (FR14). |
+| **Influence / Interest** | High, Low → Keep satisfied |
+| **Source** | CS disclaimer; UC2 |
+| **Used later in** | i* actor (dependee for "Payment authorised"); BPMN external pool "Payment Service" |
+
+#### SH8: Development team
+
+| Field | Detail |
+|---|---|
+| **Who they are** | The module team building the Camunda processes within the sprint plan. |
+| **Type** | Human, Internal |
+| **Role in Use Case 2** | Designs, implements and tests both functionalities using sandbox payments only. |
+| **Functionalities involved** | Both (F1 and F2) |
+| **Current problems (pain points)** | Not stated; constraints are fixed sprints, Camunda, and sandbox-only payments. |
+| **Goals (things they want done)** | • Deliver both functionalities within the sprints |
+| **Softgoals (qualities they care about)** | • Not stated |
+| **Depends on** | The module team for scope sign-off. |
+| **Others depend on them for** | The delivered system. |
+| **Concerns and risks** | Unresolved questions Q1 to Q3 change what gets built; sign-off planned for Wed 28 Oct. |
+| **Influence / Interest** | High, High → Manage closely (through the plan and stand-ups) |
+| **Source** | Assessment brief |
+| **Used later in** | Not an actor in the models; appears in planning only (proposed) |
 
 ### 2.2 Out-of-scope stakeholders
 
@@ -65,124 +212,19 @@ Identified from the case study and use cases but not analysed in depth, because 
 | Organic certification body | Virtual | Verifies organic claims at product listing, before checkout | UC1 – product listing |
 | Food safety authority (FSA / local environmental health) | Virtual | Involved only after a food-safety incident is reported | UC3 – quality incidents |
 | Third-party courier service | Local delivery, virtual integration | Case study names no delivery provider; each producer offers delivery or collection (proposal) | Not modelled (design decision) |
-| Customer's card issuer | Virtual | Makes the decline decision but is reached only through the payment provider (SH8) | Represented by SH8 |
+| Marketplace administrator | Local | Role named only in UC3; UC2 has no administrator step and the proposal automates the payment exception path | UC3 – exceptions and incidents |
+| Customer's card issuer | Virtual | Makes the decline decision but is reached only through the payment provider (SH7) | Represented by SH7 |
 | HMRC | Virtual | Indirect: needs producer income records for tax reporting, but takes no part in checkout or payment | Represented by producers (SH4, SH5), whose audit trails support tax reporting |
 
 ### 2.3 Open questions
 
-- [ ] **SH7 (administrator):** UC2 never names the role and the proposal automates the whole payment exception path. Keep SH7 as a core stakeholder, or move it to 2.2 as a UC3 stakeholder? The cross-check in 3.5 (C8) found no administrator in either functionality or in the proposal's RACI matrix, which argues for moving it. Confirm at sign-off (Q8).
+- [x] **Marketplace administrator:** resolved: moved out of the core set to 2.2 (UC3 stakeholder). UC2 never names the role and the proposal automates the whole payment exception path.
 - [ ] **Tutor sign-off:** the two functionalities in the proposal still need agreement with the module team (planned Wed 28 Oct).
 - [ ] **Regulators:** should the data protection regulator (ICO) and the financial services regulator (FCA) be modelled as stakeholders? The case study only says transactions must "comply with current data protection and financial services regulations" and names neither body. Alternative: treat them as regulatory constraints (requirements and Section 8) rather than actors.
 - [ ] **Payment method:** do community groups and restaurants pay by invoice rather than card? The proposal only describes card payment through a sandbox gateway; assume card payment unless told otherwise (affects SH2, SH3).
 - [x] **Who delivers?** Resolved: each producer offers delivery, collection or both, set in its profile (proposal, Functionality 1). No courier is modelled.
 - [x] **Notification service:** resolved: our own component, the Producer Notification Dispatcher (proposal, Functionality 2).
 - [x] **Second major functionality:** resolved: the proposal defines both (basket validation and order segregation; resilient payment, commission and vendor notification).
-
-### 2.4 Core stakeholder profiles
-
-Profiles for the Core stakeholders: SH1 to SH6 and SH8. SH7 is left out until its open question in 2.3 is settled, and SH9 is Supporting. Items come from the case study (CS), Use Case 2 (UC2) and Nour's proposal ("Proposal"). Dependencies are typed as goal, softgoal, task or resource, which is what the i* SD model needs in Sprint 2. "Marketplace platform" means the system run by the Network owner (SH6). Where a source names no softgoal for a stakeholder, the profile says so instead of inventing one.
-
-#### SH1 Young professionals and families
-
-| Type | Item | UC2 step | Evidence |
-|---|---|---|---|
-| Goal | Find products and add them from one or more producers to the basket | Browse, basket | CS Background (cannot visit several farm shops); CS Customers; UC2 para 1 |
-| Goal | Have the basket accepted at checkout in the quantities wanted | Checkout | UC2 para 2 |
-| Goal | Know how each producer's items reach them (delivery or collection) | Checkout | UC2 para 3; CS Customers |
-| Goal | Order paid and confirmed | Pay | UC2 para 5 |
-| Softgoal | Convenient buying, not tied to farm-shop opening hours | All | CS Background |
-| Softgoal | Seamless checkout for single-vendor and multi-vendor orders | Checkout | CS Customers |
-| Softgoal | Clear information on each supplier's responsibilities, delivery and collection | Checkout, review | CS Customers |
-| Softgoal | Secure payment and protected personal data | Pay | CS System Requirements |
-| Task | Browse and search; add to basket | Browse, basket | UC2 para 1; CS Customers |
-| Task | Amend the basket when stock is insufficient | Checkout | UC2 para 2; Proposal F1 (Customer Cart Amendment Form) |
-| Task | Choose delivery or collection where a producer offers both | Checkout | Proposal F1 (Delivery or Collection Selection Form) |
-| Task | Review and confirm the order | Checkout | UC2 para 3 |
-| Task | Enter payment details; retry if declined | Pay | UC2 para 6; Proposal F2 (Payment Entry and Retry Forms) |
-| Resource (provides) | Basket contents, delivery or collection choice, payment details, confirmation | Basket to pay | UC2 paras 1 to 5 |
-| Resource (needs) | Product information (category, harvest date, farm origin, seasonal availability); stock result; delivery and collection arrangements; order status | Browse to confirm | CS Customers; UC2 paras 2 and 3 |
-| Dependency | On Marketplace platform for: basket checked against current stock (task); order confirmed (goal); seamless checkout (softgoal) | Checkout, pay | UC2 paras 2 and 5; CS Customers |
-| Dependency | On Producers for: supplying the ordered goods (goal) | After payment | Proposal section 3 (fulfilment orders released to producers) |
-| Dependency | On Payment provider, through the platform, for: payment authorised (goal) | Pay | UC2 para 5 |
-
-#### SH2 Community groups
-
-Same tasks, resources and dependencies as SH1, because UC2 does not distinguish customer types. Differences:
-
-| Type | Item | Evidence |
-|---|---|---|
-| Goal | Obtain local supply for catering | CS Background |
-| Softgoal | Reliable and consistent supply | CS Background |
-| Dependency | On Producers for: consistent supply (softgoal) | CS Background |
-| Open point | Whether groups pay by invoice rather than card is unresolved. Card payment is assumed, as in 2.3 | Section 2.3 |
-
-#### SH3 Independent restaurants and cafés
-
-Same tasks, resources and dependencies as SH1. Differences:
-
-| Type | Item | Evidence |
-|---|---|---|
-| Goal | Source ingredients locally from many producers in one order | CS Background; UC2 para 4 |
-| Softgoal | Low administrative effort across many small suppliers | CS Background |
-| Dependency | On Marketplace platform for: one order split into producer-specific elements (task) | UC2 para 4; Proposal F1 (Order Segregation Engine) |
-| Open point | Invoice versus card, as for SH2 | Section 2.3 |
-
-#### SH4 and SH5 Producers
-
-SH4 takes orders by email and phone. SH5 has a basic social media presence. They share the profile below.
-
-| Type | Item | UC2 step | Evidence |
-|---|---|---|---|
-| Goal | Be told about each order that includes their products | Notify producers | UC2 para 5; Proposal F2 (Producer Notification Dispatcher) |
-| Goal | Receive only their own order element | Order split | UC2 para 4 |
-| Goal | Have the amount owed to them recorded | Pay | UC2 para 7; Proposal F2; CS Producers |
-| Goal | Have at least 48 hours' notice of incoming orders (not covered by Functionality 1 or 2) | Notify producers | CS Producers |
-| Goal (SH4) | Cut about 15 hours a week spent on customer communication | All | CS Producers |
-| Goal (SH5) | Manage orders despite limited technical expertise and resources | All | CS Producers |
-| Softgoal | Little technical effort and no extensive training | All | CS Producers |
-| Softgoal | Transparent, auditable earnings suitable for tax and accounting | Pay | CS Producers (financial requirements) |
-| Softgoal | Adequate lead time to prepare products | Notify producers | CS Producers |
-| Task | Keep products, stock and delivery or collection settings up to date | Before browse | CS Core Functionality; Proposal F1 (producer profile) |
-| Task | Fulfil their own order element (deliver, or make ready for collection) | After notification | Proposal F1 and section 3 |
-| Resource (provides) | Product listings, stock quantities, delivery and collection settings | Before browse | CS Core Functionality; Proposal F1 |
-| Resource (needs) | Order notification; record of the amount owed | Notify producers | UC2 para 5; Proposal F2 |
-| Dependency | On Marketplace platform for: order notification (resource); commission and amount owed calculated and recorded (goal) | Pay, notify | UC2 paras 5 and 7 |
-| Dependency | On Marketplace platform for: orders released only once paid (goal) | Pay, notify | Proposal section 3 |
-| Dependency | On Customers for: placing orders (goal) | Checkout | CS Background |
-
-#### SH6 Bristol Regional Food Network (owner)
-
-| Type | Item | UC2 step | Evidence |
-|---|---|---|---|
-| Goal | Grow the network of 40 SMEs beyond farmers' markets and farm gate sales | All | CS Background |
-| Goal | Aggregate multi-vendor orders in one checkout | Checkout, order split | CS Core Functionality; UC2 para 4 |
-| Goal | Payments collected and the amount for each producer calculated | Pay | UC2 para 7; CS Core Functionality |
-| Goal | The 5% commission calculated automatically | Pay | UC2 para 7; CS Core Functionality |
-| Goal | Transactions comply with data protection and financial services regulations | Pay | CS Core Functionality |
-| Softgoal | Viable business through accurate revenue sharing | Pay | Proposal F2 (business rationale) |
-| Softgoal | Revenue protected when payment fails or the service goes down | Pay | Proposal F2 (business rationale) |
-| Softgoal | Transparency about each supplier's responsibilities | Checkout | CS Core Functionality |
-| Task | Run the marketplace: validate the basket, split the order, take payment, notify producers | Checkout to notify | UC2 paras 2 to 5 |
-| Task | Calculate commission and record the amount each producer is owed | Pay | UC2 para 7; Proposal F2 |
-| Resource (provides) | The platform; the commission rule; the producer network | All | CS Background; Proposal F2 |
-| Resource (needs) | Product and stock data; customer orders; payment results | Basket to pay | UC2 |
-| Dependency | On Producers for: products and stock data (resource); fulfilling orders (task) | Browse, notify | CS Core Functionality; Proposal section 3 |
-| Dependency | On Customers for: orders placed (goal) | Basket | CS Background |
-| Dependency | On Payment provider for: payment authorised (goal); service available (softgoal) | Pay | UC2 paras 5 and 6 |
-
-#### SH8 Payment service provider (sandbox)
-
-| Type | Item | UC2 step | Evidence |
-|---|---|---|---|
-| Goal | Authorise or decline each payment request | Pay | UC2 para 5; CS disclaimer |
-| Softgoal | None stated. The sources describe a sandbox service and give it no quality of its own | | CS disclaimer; UC2 final para |
-| Task | Process the request and return success, decline or unavailable | Pay | Register 2.1; UC2 paras 5 and 6 |
-| Resource (provides) | Payment result | Pay | UC2 para 5 |
-| Resource (needs) | Payment request: amount, payment details, unique order reference | Pay | Proposal F2 |
-| Dependency | Marketplace platform depends on SH8 for: payment authorised (goal) | Pay | UC2 para 5 |
-| Dependency | SH8 depends on Marketplace platform for: payment request with order reference (resource) | Pay | Proposal F2 |
-
----
 
 ## 3. Derived requirements
 
@@ -191,7 +233,7 @@ SH4 takes orders by email and phone. SH5 has a basic social media presence. They
 
 ### 3.1 Functional requirements
 
-Customers = SH1, SH2, SH3. Producers = SH4, SH5. Network owner = SH6. Payment provider = SH8.
+Customers = SH1, SH2, SH3. Producers = SH4, SH5. Network owner = SH6. Payment provider = SH7.
 
 
 **Functionality 1: Multi-Vendor Basket Inventory Validation & Order Segregation**
@@ -263,7 +305,7 @@ For the sign-off meeting (planned Wed 28 Oct). Q1 to Q3 affect what gets built, 
 5. **Re-validation after amendment.** After the customer amends the basket, is the stock check repeated? The proposal's diagram shows an arrow into the amend form but none back out.
 6. **Browsing and search.** UC2 begins with browsing, searching and adding to the basket, and the case study requires both. Neither functionality covers them. Are they assumed to exist already, or should one functionality be widened? (C6)
 7. **Customer receipt.** The receipt appears only in the proposal's diagram. Is it a required output of F2? (C7, FR21)
-8. **Marketplace administrator (SH7).** No administrator appears in UC2 or in either functionality. Confirm SH7 moves out of the core stakeholder set and belongs to UC3. (C8, 2.3)
+8. **Marketplace administrator.** No administrator appears in UC2 or in either functionality, so we have moved the role to out-of-scope stakeholders in 2.2 (UC3). Confirm. (C8, 2.3)
 9. **One payment or one per producer.** The proposal gives each checkout one unique order reference sent with the payment request, but also calculates amounts per producer. Is the customer charged once for the whole basket, or once per producer order? (FR10, FR13)
 10. **Retry limits.** UC2 says the customer is given the opportunity to retry but sets no limit. The 3 attempts, 3 retries, 30-second wait and 24-hour hold are all the proposal's own figures. Are these acceptable? Also, for outages, does "up to 3 retries" count the first failed call or only the calls after it? (BR2, BR3, BR4)
 11. **Order status and failed orders.** The order and its producer-specific elements are created before payment, but the proposal names no status for that period (only `CONFIRMED`, `PAYMENT_FAILED`, `PAYMENT_PENDING`, `CANCELLED`). What status does an order have between creation and payment? If it ends as `PAYMENT_FAILED` or `CANCELLED`, what happens to those records?
@@ -294,11 +336,10 @@ Include the alternate courses: insufficient stock, payment declined, payment ser
 | SH2 | Low | High | Keep informed | Regularly need reliable local supply for catering (CS Background), but have no say in how the platform works. |
 | SH3 | Low | High | Keep informed | Want local sourcing without the admin of many suppliers (CS Background), but no say in the platform. |
 | SH4 | High | High | Manage closely | The marketplace has nothing to sell without producers: they list products, hold the stock and fulfil orders. Orders, notice and amounts owed directly affect their time and income (CS Producers). |
-| SH5 | High | High | Manage closely | Same dependence as SH4, with less technical capacity, so the platform has to fit them (CS Producers). |
+| SH5 | High | High | Manage closely | Like SH4, the marketplace depends on them for stock and fulfilment, but they have less technical capacity, so the platform has to fit them (CS Producers). |
 | SH6 | High | High | Manage closely | Owns the marketplace, sets the 5% commission and is the business that must grow (CS Background and Core Functionality). |
-| SH7 | Low | Low | Monitor (provisional) | No administrator appears in UC2 or either functionality, and the proposal automates the exception path. Depends on the SH7 question in 2.3. |
-| SH8 | High | Low | Keep satisfied | Its availability and responses decide the payment retry and exception design (UC2 para 6; Proposal F2), but it has no stake in the marketplace's goals. |
-| SH9 | High | High | Manage closely | Builds the system within the sprint plan, using Camunda and sandbox payments only (assessment brief). Managed through the plan and stand-ups. |
+| SH7 | High | Low | Keep satisfied | Its availability and responses decide the payment retry and exception design (UC2 para 6; Proposal F2), but it has no stake in the marketplace's goals. |
+| SH8 | High | High | Manage closely | Builds the system within the sprint plan, using Camunda and sandbox payments only (assessment brief). Managed through the plan and stand-ups. |
 
 Quadrants: manage closely (high/high), keep satisfied (high power, low interest), keep informed (low power, high interest), monitor (low/low).
 
@@ -313,7 +354,7 @@ Quadrants: manage closely (high/high), keep satisfied (high power, low interest)
 | T1 | Customer convenience vs the producers' 48-hour lead time | SH1 to SH3 vs SH4, SH5 | Customers buy to avoid the limits of farm-shop opening hours (CS Background). Producers need at least 48 hours to prepare (CS Producers). No source puts a delivery or collection date in checkout. | Pending the lead-time question in section 3. If checkout captures a date, offer only dates at least 48 hours after the order. | Customer softgoal "Convenient buying" with a hurt link from producer softgoal "Adequate lead time" |
 | T2 | 5% commission vs producer earnings | SH6 vs SH4, SH5 | The owner needs the commission to stay viable (Proposal F2 rationale). Producers want transparent, auditable earnings (CS Producers). | Commission only on the item subtotal, and delivery fees go fully to the producer (Proposal F2). Record the amount owed for each producer order with an audit trail. | Owner goal "Commission calculated" against producer softgoal "Transparent earnings", resolved by a task "Record amount owed" |
 | T3 | Simplicity for low-tech producers vs multi-vendor complexity | SH4, SH5 vs SH1 to SH3, SH6 | Producers have little technical expertise (CS Producers). Checkout must handle multi-vendor orders seamlessly (CS Customers). | The system does the splitting. Each producer is notified of only their own order element (UC2 para 4; Proposal F1 and F2). | Producer softgoal "Little technical effort" against customer softgoal "Seamless checkout", resolved by task "Split order by producer" |
-| T4 | Payment retry waits and the 24-hour hold vs customer convenience | SH1 to SH3 vs SH6, SH8 | Retrying and holding protect revenue when the payment service fails (Proposal F2) but make the customer wait or come back later. | Bounded retries (BR2, BR3), basket kept after a failure, and a limited hold before cancellation (BR4). | Customer softgoal "Quick checkout" against owner softgoal "Revenue protected", with SH8 as the dependee for "Payment authorised" |
+| T4 | Payment retry waits and the 24-hour hold vs customer convenience | SH1 to SH3 vs SH6, SH7 | Retrying and holding protect revenue when the payment service fails (Proposal F2) but make the customer wait or come back later. | Bounded retries (BR2, BR3), basket kept after a failure, and a limited hold before cancellation (BR4). | Customer softgoal "Quick checkout" against owner softgoal "Revenue protected", with SH7 as the dependee for "Payment authorised" |
 | T5 | Checking stock before payment vs preventing overselling | SH1 to SH3 vs SH4, SH5 | Stock is checked before payment but deducted only after it, which avoids rollbacks (Proposal section 3). Between the check and the deduction another customer could buy the same item. | Check stock before payment and deduct atomically after it. Whether stock is reserved during a pending order is an open question in section 3. | Producer goal "Stock accurate" against customer goal "Order confirmed" |
 | T6 | Traceability records vs data minimisation | SH6, SH4, SH5 vs SH1 to SH3 | The case study requires records linking customers, products and producers, and audit trails (CS Quality Assurance; CS Producers). It also requires compliance with data protection regulations (CS Core Functionality). | Keep only the fields needed for the order and the audit trail. Take the legal detail into the LESP review (section 8). | Owner softgoal "Traceable records" against customer softgoal "Privacy of personal data" |
 
