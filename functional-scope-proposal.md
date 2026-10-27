@@ -150,7 +150,7 @@ A governance matrix identifying who is Responsible (R), Accountable (A), Consult
 - Work must be finished within the module timetable.
 - The project is built by students, so no real customer or card data is used.
 
---
+---
 
 ## 7. Risks and Open questions
 
@@ -166,7 +166,7 @@ Floating-Point Rounding Drift:
 - If payment succeeds but stock has run out, is a refund handled in this project or listed as future work?
 - Should the 24-hour hold on `PAYMENT_PENDING` orders reserve stock, or leave it available to others?
 
---
+---
 
 ## 8. Out of scope
 
@@ -179,7 +179,7 @@ The Following features are NOT part of this system.(to keep the scope realistic.
 - Producer registration and product management
 - Customer account creation and login
  
---
+---
 
 ## 9. Change Control and Sign-Off
 
