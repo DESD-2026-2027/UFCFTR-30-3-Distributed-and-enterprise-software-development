@@ -17,24 +17,24 @@ Deliver a strategic BPMN model of the marketplace, a scoped pair of major functi
 
 ### Thu 22 Oct: Setup
 - [x] Finish Monday.com board with all sprint deadlines and owners (Rayan)
-- [ ] Add module leaders to the repo and protect `main` (Sadik)
+- [x] protect `main` (Sadik)
 - [x] Commit README with team, roles and board link (Sadik)
 - [x] Prepare individual stand-up updates (all)
 
 ### Fri 23 Oct: Scope and analysis
-- [ ] Write `docs/functional-scope-proposal.md`: two functionalities, rationale, confirmation boundary, actor-to-responsibility table (Nour)
-- [ ] Write `docs/stakeholders.md` (Rayan)
-- [ ] Write `docs/business-rules.md`: 5% commission, decline retry, payment outage handling (Fares)
-- [ ] Draft `docs/data-model.md` (Sadik)
-- [ ] Open PRs and review each other's work (all)
+- [x] Write `docs/functional-scope-proposal.md`: two functionalities, rationale, confirmation boundary, actor-to-responsibility table (Nour)
+- [x] Write `docs/stakeholders.md` (Rayan)
+- [x] Write `docs/business-rules.md`: 5% commission, decline retry, payment outage handling (Fares)
+- [x] Draft `docs/data-model.md` (Sadik)
+- [x] Open PRs and review each other's work (all)
 
 ### Sat 24 to Mon 26 Oct: Strategic BPMN
-- [ ] Draft Customer and Producers pools (Rayan)
-- [ ] Draft Payment Service pool and payment message flows (Fares)
-- [ ] Draft Logistics/Collection pool (Sadik)
-- [ ] Draft Marketplace pool with lanes, plus the four collapsed sub-processes and process relationships (Nour)
-- [ ] Group review against the checklist below (all, Mon 26)
-- [ ] Export `.bpmn`, `.svg`, `.png` to `docs/strategic-bpmn/` and merge via PR (Nour)
+- [x] Draft Customer and Producers pools (Rayan)
+- [x] Draft Payment Service pool and payment message flows (Fares)
+- [x] Draft Logistics/Collection pool (Sadik)
+- [x] Draft Marketplace pool with lanes, plus the four collapsed sub-processes and process relationships (Nour)
+- [x] Group review against the checklist below (all, Mon 26)
+- [x] Export `.bpmn`, `.svg`, `.png` to `docs/strategic-bpmn/` and merge via PR (Nour)
 
 
 ### Mon 26 to Tue 27 Oct: Agreement and audit
@@ -46,9 +46,9 @@ Deliver a strategic BPMN model of the marketplace, a scoped pair of major functi
 - [ ] Commit `docs/product-backlog.md` (Rayan)
 
 ### Thu 29 Oct: Submission day (before 14:00)
-- [ ] Final read-through of all artefacts (all)
+- [x] Final read-through of all artefacts (all)
 - [ ] Tag and push: `git tag -a v1.0-sprint1 -m "Sprint 1: Strategic BPMN and backlog"` then `git push origin v1.0-sprint1` (Sadik)
-- [ ] Rehearse explanations so every member can answer questions (all)
+- [x] Rehearse explanations so every member can answer questions (all)
 
 ## Dependencies and Risks
 
