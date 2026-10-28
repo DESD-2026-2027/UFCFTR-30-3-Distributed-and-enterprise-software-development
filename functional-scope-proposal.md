@@ -53,6 +53,7 @@ In accordance with the assessment brief, these functionalities establish the fou
   * *Service Tasks*: Commission Calculation Engine, Sandbox Payment API Client, Inventory Deduction Service, Producer Notification Dispatcher.
   * *Boundary Events,* (a special event attached to the edge of a step that happens once a condition is triggered. Going to be used to catch errors, timeouts and other problems) *Timers & Gateways*: Payment Gateway Error Handling Boundary Event, Retry Wait Timer (30 seconds between retries), Retry Limit Check Gateway (`Attempts Remaining` vs. `Limit Reached`), Payment Status Decision Gateway (`Success`, `Declined`, `Service Unavailable`).
 
+---
 
 ## 3. Order Confirmation Boundary
 This little Diagram shows the Confirmation route that an order takes to transition from a tentative pending state to a legally binding, committed business contract.
@@ -92,7 +93,9 @@ This little Diagram shows the Confirmation route that an order takes to transiti
 
 Inventory is not decremented, and producers are not notified, until payment authorization has succeeded. This avoids complex inventory rollbacks  and prevents producers from fulfilling unpaid orders.
 
-4. Actor-to-Responsibility Matrix (RACI)
+---
+
+## 4. Actor-to-Responsibility Matrix (RACI)
 
 A governance matrix identifying who is Responsible (R), Accountable (A), Consulted (C), and Informed (I) for each activity
 
@@ -109,11 +112,88 @@ A governance matrix identifying who is Responsible (R), Accountable (A), Consult
 | Decrement Stock on Success | - | I | A / R | - | I | - |
 | Notify Producers of Fulfillment | - | A / R | - | I | I | - |
 
+---
+
+## 5. Success Criteria
+
+
+| 1 |  Customers must be able to add items from multiple distinct vendors into a single shopping bag and complete one combined transaction without forced multi-step redirects.
+
+| 2 |  If stock is too low, the customer is told and can change the basket.
+
+| 3 |  One Customer order that contains N Producers is split into N Producer orders. (Every Producer must get his own order with only his items.)
+
+| 4 |  Marketplace commission calculation engine enforces exact 5% fee allocation per vendor sub-order.
+
+| 5 |  A declined payment lets the customer retry up to 3 times, anymore more than that and the order becomes "PAYEMENT_FAILED".
+
+| 6 |  A payment service outage does not end the process, a simulated 503 triggers up to 3 tries.
+
+| 7 |  Stock is only reduced and Porducers are only notified after the payement is successful.
+
+| 8 |  Show the correct shipping type for each respective item in a single basket (if the items have different shipping types).
+
+| 9 |  Clicking confirm twice does not create two orders or two payments.
+
+---
+
+## 6. Assumptions and Constraints
+
+**Assumptions**
+- A sandbox or simulated payment service is used, NO ACTUALLY LIVE MONEY/PAYEMENT IS USED.
+- The Producers have already set up their items, stock levels and shipping options.
+- Customers have already Registered/LoggedIn before checking out.
+- All amounts are calculated in GBP
+
+**Constraints**
+- The processes must be built and run in Camunda in Sprints 2 and 3.
+- Work must be finished within the module timetable.
+- The project is built by students, so no real customer or card data is used.
+
+---
+
+## 7. Risks and Open questions
+
+**Risks**
+Inventory Race Conditions (Phantom Stock): 
+  * *Risk*: Multiple checkouts for the same stock item collide before deduction.
+  * *Resolution*: Apply a 10-minute soft reservation hold on basket items upon checkout initialization.
+Floating-Point Rounding Drift:
+  * *Risk*: 5% platform cut across multiple vendors leaves fractional pennies unaccounted for.
+  * *Resolution*: Enforce integer/pence arithmetic.
+
+ **Open questions**
+- If payment succeeds but stock has run out, is a refund handled in this project or listed as future work?
+- Should the 24-hour hold on `PAYMENT_PENDING` orders reserve stock, or leave it available to others?
+
+---
+
+## 8. Out of scope
+
+The Following features are NOT part of this system.(to keep the scope realistic.)
+- Live payment processing and real card data
+- Refunds and order cancellations after payment
+- Vendor bank payouts
+- Courier integration and delivery tracking
+- Promo codes, discounts and loyalty points
+- Producer registration and product management
+- Customer account creation and login
+ 
+---
+
+## 9. Change Control and Sign-Off
+
+**Change control**
+1. Any change to the scope is written down, with the reason and its effect on the sprint plan.
+2. The change is sent to the module tutor for approval.
+3. The scope document is updated and the version number is increased only after approval.
 
 
 
-
-
+| Role | Name | Date | Signature |
+|---|---|---|---|
+| Author | Nour |    |           |
+| Module Tutor | |   |           |
 
 
 
