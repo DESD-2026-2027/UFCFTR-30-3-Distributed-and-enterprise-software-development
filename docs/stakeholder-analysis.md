@@ -28,7 +28,7 @@
 **Sources.**
 - Bristol Regional Food Network case study (v2)
 - Task 1 Use Cases (Use Case 2 is the one delivered)
-- Functional Scope Proposal (`doc/functional-scope-proposal.md`)
+- Functional Scope Proposal (`docs/functional-scope-proposal.md`)
 - UFCFTR-30-3 Task 1 assessment brief
 - Requirements Handling lecture (stakeholder groups, FR/NFR, user stories)
 
@@ -44,9 +44,9 @@
 
 | ID | Stakeholder | Wants | Relies on | Local / Virtual | UC2 | Evidence |
 |---|---|---|---|---|---|---|
-| SH1 | Young professionals and families | Add products from several producers to one basket (G1); basket accepted (G2); know delivery or collection (G3); order paid and confirmed (G4) | Platform (stock check, confirmation); producers (supply); payment provider | Local | Core | Case study, Background, Customers; UC2 |
-| SH2 | Community groups (schools, care facilities, voluntary organisations) | Add products from several producers to one basket (G1); basket accepted (G2); know delivery or collection (G3); order paid and confirmed (G4) | Platform; producers for consistent supply | Local | Core | Case study, Background |
-| SH3 | Independent restaurants and cafés | Add products from several producers to one basket (G1); basket accepted (G2); know delivery or collection (G3); order paid and confirmed (G4) | Platform to split the order by producer | Local | Core | Case study, Background; UC2 §4 |
+| SH1 | Young professionals and families | Add products from one or more producers to one basket (G1); basket accepted (G2); know delivery or collection (G3); order paid and confirmed (G4) | Platform (stock check, confirmation); producers (supply); payment provider | Local | Core | Case study, Background, Customers; UC2 |
+| SH2 | Community groups (schools, care facilities, voluntary organisations) | Add products from one or more producers to one basket (G1); basket accepted (G2); know delivery or collection (G3); order paid and confirmed (G4) | Platform; producers for consistent supply | Local | Core | Case study, Background |
+| SH3 | Independent restaurants and cafés | Add products from one or more producers to one basket (G1); basket accepted (G2); know delivery or collection (G3); order paid and confirmed (G4) | Platform to split the order by producer | Local | Core | Case study, Background; UC2 §4 |
 | SH4 | Low-tech producers (email/phone ordering) | Cut ~15 h/week of customer communication (G5); notified of orders with at least 48 h notice (G6) | Platform (notification, commission, orders released only once paid); customers for orders | Local | Core | Case study, Producers; UC2 |
 | SH5 | Digitally basic producers (social media) | Cut customer communication (G5, inferred); notified of orders with at least 48 h notice (G6) | Platform (notification, commission, orders released only once paid); customers for orders | Local | Core | Case study, Producers; UC2 |
 | SH6 | Bristol Regional Food Network (owner) | 5% commission calculated automatically (G7); one checkout for multi-vendor orders (G8) | Producers (stock, fulfilment); customers (orders); payment provider; regulators' rules | Local | Core | Case study, Background and Core Functionality; UC2 |
@@ -61,7 +61,7 @@ IDs used in the stakeholder profiles (2.1.2) and available to the i* models. A g
 
 | ID | Goal | What it means | Stakeholders | Related requirements |
 |---|---|---|---|---|
-| G1 | Add products from several producers to one basket | The customer can put items from more than one producer into a single basket and check out once. | Customers (SH1 to SH3) | FR1, FR4 |
+| G1 | Add products from one or more producers to one basket | The customer can put items from one or more producers into a single basket and check out once. | Customers (SH1 to SH3) | FR1, FR4 |
 | G2 | Have the basket accepted (stock confirmed) | Every item is checked against the producer's current stock before the customer pays; the customer amends the basket if not. | Customers (SH1 to SH3) | FR2, FR3 |
 | G3 | Know the delivery or collection arrangements | The customer sees, before confirming, whether each producer delivers, offers collection or both, and chooses where there is a choice. | Customers (SH1 to SH3) | FR5 to FR7 |
 | G4 | Pay and receive order confirmation | The customer pays through the sandbox payment service, can retry a declined payment, and is told the order is confirmed. | Customers (SH1 to SH3) | FR12 to FR15, FR20 |
@@ -99,7 +99,7 @@ One profile per stakeholder in the register. Goals and softgoals are listed by I
 |---|---|
 | **Who they are** | Local individual buyers who want to buy from regional producers outside farm-shop opening hours. |
 | **Type** | Human, External |
-| **Role in Use Case 2** | Builds a basket from one or several producers, amends it if stock is short, chooses delivery or collection, reviews and confirms the order, pays, retries if declined, and receives confirmation. |
+| **Role in Use Case 2** | Builds a basket from one or more producers, amends it if stock is short, chooses delivery or collection, reviews and confirms the order, pays, retries if declined, and receives confirmation. |
 | **Functionalities involved** | Both (F1 and F2) |
 | **Current problems (pain points)** | Farm shops are only open at limited hours; buying from several producers means dealing with each one separately (inferred). |
 | **Goals (things they want done)** | G1, G2, G3, G4 |
@@ -245,13 +245,13 @@ Identified from the case study and use cases but not analysed in depth, because 
 
 Customers = SH1, SH2, SH3. Producers = SH4, SH5. Network owner = SH6. Payment provider = SH7.
 
-**Source key:** UC2 = Use Case 2 (§ = paragraph number); CS = case study; F1 / F2 = proposal Functionality 1 / 2; F§3 = proposal section 3 diagram; Q*n* = open question *n* in 3.3.
+**Source key:** UC2 = Use Case 2 (§ = paragraph number); CS = case study; F1 / F2 = proposal Functionality 1 / 2; F§*n* = proposal section *n* (F§3 is the confirmation diagram); Q*n* = open question *n* in 3.3.
 
 **Functionality 1: Multi-Vendor Basket Inventory Validation & Order Segregation**
 
 | ID | Requirement | Stakeholders | Source | Priority (MoSCoW) |
 |---|---|---|---|---|
-| FR1 | When the customer proceeds to checkout, the system gathers every item in the basket. The basket may contain items from one producer or from several. | Customers | UC2 §2; CS; F1 | Must |
+| FR1 | When the customer proceeds to checkout, the system gathers every item in the basket. The basket may contain items from one producer or from several. | Customers | UC2 §1–2; CS; F1 | Must |
 | FR2 | The system checks each basket item against the producer's current stock, in real time, for the quantity requested. | Customers, Producers | UC2 §2; F1 | Must |
 | FR3 | If an item is unavailable or stock is insufficient, the system informs the customer and asks them to amend the basket (Customer Cart Amendment Form). | Customers | UC2 §2; F1 | Must |
 | FR4 | The system identifies the producers involved in the basket. | Producers, Network owner | UC2 §3; F1 | Must |
@@ -268,7 +268,7 @@ Customers = SH1, SH2, SH3. Producers = SH4, SH5. Network owner = SH6. Payment pr
 | FR10 | The system calculates the basket total and the amount attributable to each producer. | Producers, Network owner | UC2 §7; F2 | Must |
 | FR11 | The system calculates the marketplace commission for each producer order, at the rate and on the base set in the business rules. The proposal's diagram places this before payment is submitted; UC2 does not say when. | Network owner, Producers | UC2 §7; CS; F2; F§3 | Must |
 | FR12 | The system collects the customer's payment details (Payment Entry Form) and submits the payment to a sandbox or simulated payment service. | Customers, Payment provider | UC2 §5; F2 (Q5) | Must |
-| FR13 | Each checkout is given a unique order reference, which is sent with the payment request. If the same reference is submitted again, the system returns the existing result instead of creating a second order or payment. | Customers, Network owner | F2 | Must |
+| FR13 | The confirm button is disabled after the first click. Each checkout is given a unique order reference, which is sent with the payment request. If the same reference is submitted again, the system returns the existing result instead of creating a second order or payment. | Customers, Network owner | F2 | Must |
 | FR14 | If payment succeeds, the order status becomes `CONFIRMED`. | Customers | UC2 §5; F§3 | Must |
 | FR15 | If payment is declined, the system informs the customer and offers a retry (Payment Declined - Retry Form), up to the attempt limit in the business rules. At the limit the order becomes `PAYMENT_FAILED`, the customer is informed and the basket is kept. | Customers, Network owner, Payment provider | UC2 §6; F2 | Must |
 | FR16 | If the payment service times out or returns a 503, the system follows a retry path with an attempt counter, within the retry limit and wait time in the business rules, rather than terminating. | Customers, Network owner, Payment provider | UC2 §6; F2 | Must |
@@ -289,6 +289,7 @@ No source states priorities, so these are proposed and will be confirmed by the 
 | NFR4 | Financial records provide a transparent audit trail suitable for tax reporting and accounting. | Auditability | CS | Inspect stored records for one order: amount, commission and producer are traceable to the order reference |
 | NFR5 | Both functionalities are implemented as executable Camunda processes (user tasks, forms, service tasks) and are kept for reuse in Task 2. | Constraint | Brief | Deploy and run both processes end to end in Camunda |
 | NFR6 | A payment service timeout or outage does not lose the order or create a duplicate payment. | Reliability / fault tolerance | UC2 §6; F2 | Simulate a 503 in the sandbox; check the order ends as `PAYMENT_PENDING`, no stock is deducted and resubmitting the same reference creates no second payment |
+| NFR7 | All amounts are in GBP and calculated in whole pence, so splitting the 5% commission across producers never leaves fractional pennies unaccounted for. | Accuracy | F§6; F§7 | For a multi-producer order, check that the producer-specific order elements plus commission add up exactly to the basket total, in pence |
 
 ### 3.3 Open questions for the module team
 
@@ -357,7 +358,7 @@ Not listed as dependencies: the regulators, because whether the ICO and FCA are 
 *UWE Harvard format.*
 
 - Bristol Regional Food Network (2026) *Digital Marketplace Case Study v2*. UFCFTR-30-3, University of the West of England.
-- Rachidi, N. (2026) *Functional Scope Proposal & Architectural Boundaries*. UFCFTR-30-3 group repository, `doc/functional-scope-proposal.md`.
+- Rachidi, N. (2026) *Functional Scope Proposal & Architectural Boundaries*. UFCFTR-30-3 group repository, `docs/functional-scope-proposal.md`.
 - University of the West of England (2026) *UFCFTR-30-3 Task 1 Assessment Brief*. Bristol: UWE.
 - University of the West of England (2026) *UFCFTR-30-3 Task 1 Use Cases*. Bristol: UWE.
 - University of the West of England (2026) *Requirements Handling* [lecture slides]. UFCFTR-30-3. Bristol: UWE.
