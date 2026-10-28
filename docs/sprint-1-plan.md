@@ -36,23 +36,14 @@ Deliver a strategic BPMN model of the marketplace, a scoped pair of major functi
 - [ ] Group review against the checklist below (all, Mon 26)
 - [ ] Export `.bpmn`, `.svg`, `.png` to `docs/strategic-bpmn/` and merge via PR (Nour)
 
-**Review checklist**
-- [ ] Delivery and collection both appear
-- [ ] External payment service interaction is shown
-- [ ] Message flows are dashed and run between pools only
-- [ ] No form fields or micro-level logic
 
-### Mon 26 to Tue 27 Oct: Backlog and sprint plan
-- [ ] Write user stories, including delivery/collection, order confirmation and payment service outage (Rayamn, Fares)
-- [ ] Add MoSCoW priorities and Gherkin acceptance criteria (Rayan)
-- [ ] Mirror stories on the board with Sprint 1/2/3 milestones (Rayan)
-- [ ] Commit `docs/product-backlog.md` (Rayan)
-
-### Wed 28 Oct: Agreement and audit
+### Mon 26 to Tue 27 Oct: Agreement and audit
 - [ ] Get tutor sign-off on the two functionalities and record the feedback in `docs/` (Nour)
-- [ ] Check every member has merged PRs and commits; reassign a review or documentation task if not (Sadik)
-- [ ] Check the README links to the BPMN, scope document, backlog and this plan (Sadik)
 - [ ] Draft Contribution Matrix (Sadik)
+
+
+### Wed 28 Oct: Backlog and sprint plan)
+- [ ] Commit `docs/product-backlog.md` (Rayan)
 
 ### Thu 29 Oct: Submission day (before 14:00)
 - [ ] Final read-through of all artefacts (all)
