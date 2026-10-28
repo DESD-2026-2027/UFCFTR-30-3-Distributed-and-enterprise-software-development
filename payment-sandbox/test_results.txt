@@ -1,0 +1,13 @@
+test_approved (test_payment_service.PaymentTests.test_approved) ... ok
+test_conflict (test_payment_service.PaymentTests.test_conflict) ... ok
+test_declined (test_payment_service.PaymentTests.test_declined) ... ok
+test_duplicate_producer (test_payment_service.PaymentTests.test_duplicate_producer) ... ok
+test_idempotent (test_payment_service.PaymentTests.test_idempotent) ... ok
+test_negative (test_payment_service.PaymentTests.test_negative) ... ok
+test_rounding (test_payment_service.PaymentTests.test_rounding) ... ok
+test_unavailable (test_payment_service.PaymentTests.test_unavailable) ... ok
+
+----------------------------------------------------------------------
+Ran 8 tests in 0.001s
+
+OK
