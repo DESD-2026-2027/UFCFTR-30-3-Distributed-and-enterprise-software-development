@@ -22,16 +22,16 @@ Deliver a strategic BPMN model of the marketplace, a scoped pair of major functi
 - [x] Prepare individual stand-up updates (all)
 
 ### Fri 23 Oct: Scope and analysis
-- [ ] Write `docs/functional-scope-proposal.md`: two functionalities, rationale, confirmation boundary, actor-to-responsibility table (Nour)
-- [ ] Write `docs/stakeholders.md` (Rayan)
+- [x] Write `docs/functional-scope-proposal.md`: two functionalities, rationale, confirmation boundary, actor-to-responsibility table (Nour)
+- [x] Write `docs/stakeholders.md` (Rayan)
 - [ ] Write `docs/business-rules.md`: 5% commission, decline retry, payment outage handling (Fares)
-- [ ] Draft `docs/data-model.md` (Sadik)
-- [ ] Open PRs and review each other's work (all)
+- [x] Draft `docs/data-model.md` (Sadik)
+- [x] Open PRs and review each other's work (all)
 
 ### Sat 24 to Mon 26 Oct: Strategic BPMN
 - [ ] Draft Customer and Producers pools (Rayan)
 - [ ] Draft Payment Service pool and payment message flows (Fares)
-- [ ] Draft Logistics/Collection pool (Sadik)
+- [x] Draft Logistics/Collection pool (Sadik)
 - [ ] Draft Marketplace pool with lanes, plus the four collapsed sub-processes and process relationships (Nour)
 - [ ] Group review against the checklist below (all, Mon 26)
 - [ ] Export `.bpmn`, `.svg`, `.png` to `docs/strategic-bpmn/` and merge via PR (Nour)
