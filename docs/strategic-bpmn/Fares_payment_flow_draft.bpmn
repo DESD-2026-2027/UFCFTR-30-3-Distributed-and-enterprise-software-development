@@ -1,0 +1,468 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_UseCase2" targetNamespace="http://example.com/usecase2/payment" exporter="Camunda Web Modeler" exporterVersion="aa92d9c" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.10.0">
+  <bpmn:message id="Message_PaymentRequest" name="PaymentRequest" />
+  <bpmn:message id="Message_ServiceRequest" name="ServiceRequest" />
+  <bpmn:message id="Message_ServiceResult" name="ServiceResult">
+    <bpmn:extensionElements>
+      <ns1:subscription xmlns:ns1="http://camunda.org/schema/zeebe/1.0" correlationKey="=bookingId" />
+    </bpmn:extensionElements>
+  </bpmn:message>
+  <bpmn:message id="Message_BookingResult" name="BookingResult">
+    <bpmn:extensionElements>
+      <ns0:subscription xmlns:ns0="http://camunda.org/schema/zeebe/1.0" correlationKey="=bookingId" />
+    </bpmn:extensionElements>
+  </bpmn:message>
+  <bpmn:collaboration id="Collaboration_UC2">
+    <bpmn:participant id="Participant_Customer" name="Customer / Checkout" processRef="Process_Customer" />
+    <bpmn:participant id="Participant_Rules" name="Booking / Business Rules" processRef="Process_Rules" />
+    <bpmn:participant id="Participant_Service" name="Simulated Payment Service" processRef="Process_Service" />
+    <bpmn:messageFlow id="MessageFlow_01" name="Payment request" sourceRef="C_Send" targetRef="R_Start" />
+    <bpmn:messageFlow id="MessageFlow_02" name="Payment request" sourceRef="R_Send" targetRef="S_Start" />
+    <bpmn:messageFlow id="MessageFlow_03" name="Payment response" sourceRef="S_Send" targetRef="R_Wait" />
+    <bpmn:messageFlow id="MessageFlow_04" name="Booking result" sourceRef="R_Notify" targetRef="C_Receive" />
+  </bpmn:collaboration>
+  <bpmn:process id="Process_Customer" name="Customer / Checkout" isExecutable="true">
+    <bpmn:startEvent id="C_Start" name="Start checkout">
+      <bpmn:outgoing>Flow_01</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:task id="C_Fare" name="Select fare">
+      <bpmn:incoming>Flow_01</bpmn:incoming>
+      <bpmn:outgoing>Flow_02</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="C_Review" name="Review fare + 5% commission">
+      <bpmn:incoming>Flow_02</bpmn:incoming>
+      <bpmn:outgoing>Flow_03</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="C_Method" name="Select payment method">
+      <bpmn:incoming>Flow_03</bpmn:incoming>
+      <bpmn:incoming>Flow_10</bpmn:incoming>
+      <bpmn:outgoing>Flow_04</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:sendTask id="C_Send" name="Submit payment request">
+      <bpmn:extensionElements>
+        <ns1:taskDefinition xmlns:ns1="http://camunda.org/schema/zeebe/1.0" type="checkout-submit-payment" retries="3" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_04</bpmn:incoming>
+      <bpmn:outgoing>Flow_05</bpmn:outgoing>
+    </bpmn:sendTask>
+    <bpmn:receiveTask id="C_Receive" name="Receive booking result" messageRef="Message_BookingResult">
+      <bpmn:incoming>Flow_05</bpmn:incoming>
+      <bpmn:outgoing>Flow_06</bpmn:outgoing>
+    </bpmn:receiveTask>
+    <bpmn:exclusiveGateway id="C_Gateway" name="Booking confirmed?" default="Flow_08">
+      <bpmn:incoming>Flow_06</bpmn:incoming>
+      <bpmn:outgoing>Flow_07</bpmn:outgoing>
+      <bpmn:outgoing>Flow_08</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:endEvent id="C_Confirmed" name="Booking confirmed">
+      <bpmn:incoming>Flow_07</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:exclusiveGateway id="C_Retry" name="Retry payment?" default="Flow_09">
+      <bpmn:incoming>Flow_08</bpmn:incoming>
+      <bpmn:outgoing>Flow_09</bpmn:outgoing>
+      <bpmn:outgoing>Flow_10</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:endEvent id="C_Abort" name="No confirmed booking">
+      <bpmn:incoming>Flow_09</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_01" sourceRef="C_Start" targetRef="C_Fare" />
+    <bpmn:sequenceFlow id="Flow_02" sourceRef="C_Fare" targetRef="C_Review" />
+    <bpmn:sequenceFlow id="Flow_03" sourceRef="C_Review" targetRef="C_Method" />
+    <bpmn:sequenceFlow id="Flow_10" name="Yes – change method" sourceRef="C_Retry" targetRef="C_Method">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=retryPayment = true</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_04" sourceRef="C_Method" targetRef="C_Send" />
+    <bpmn:sequenceFlow id="Flow_05" sourceRef="C_Send" targetRef="C_Receive" />
+    <bpmn:sequenceFlow id="Flow_06" sourceRef="C_Receive" targetRef="C_Gateway" />
+    <bpmn:sequenceFlow id="Flow_07" name="Yes" sourceRef="C_Gateway" targetRef="C_Confirmed">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=bookingConfirmed = true</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_08" name="No" sourceRef="C_Gateway" targetRef="C_Retry" />
+    <bpmn:sequenceFlow id="Flow_09" name="No" sourceRef="C_Retry" targetRef="C_Abort" />
+  </bpmn:process>
+  <bpmn:process id="Process_Rules" name="Booking / Business Rules" isExecutable="true">
+    <bpmn:startEvent id="R_Start" name="Payment requested">
+      <bpmn:outgoing>Flow_11</bpmn:outgoing>
+      <bpmn:messageEventDefinition id="MessageDef_R_Start" messageRef="Message_PaymentRequest" />
+    </bpmn:startEvent>
+    <bpmn:task id="R_Receive" name="Receive request + unique ID">
+      <bpmn:incoming>Flow_11</bpmn:incoming>
+      <bpmn:outgoing>Flow_12</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:sendTask id="R_Send" name="Request payment simulation">
+      <bpmn:extensionElements>
+        <ns1:taskDefinition xmlns:ns1="http://camunda.org/schema/zeebe/1.0" type="rules-request-payment" retries="3" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_12</bpmn:incoming>
+      <bpmn:outgoing>Flow_13</bpmn:outgoing>
+    </bpmn:sendTask>
+    <bpmn:receiveTask id="R_Wait" name="Receive payment response" messageRef="Message_ServiceResult">
+      <bpmn:incoming>Flow_13</bpmn:incoming>
+      <bpmn:outgoing>Flow_14</bpmn:outgoing>
+    </bpmn:receiveTask>
+    <bpmn:exclusiveGateway id="R_Gateway" name="Payment approved?" default="Flow_16">
+      <bpmn:incoming>Flow_14</bpmn:incoming>
+      <bpmn:outgoing>Flow_15</bpmn:outgoing>
+      <bpmn:outgoing>Flow_16</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:task id="R_Confirm" name="Confirm booking">
+      <bpmn:incoming>Flow_15</bpmn:incoming>
+      <bpmn:outgoing>Flow_17</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="R_Decline" name="Keep booking unconfirmed">
+      <bpmn:incoming>Flow_16</bpmn:incoming>
+      <bpmn:outgoing>Flow_18</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:sendTask id="R_Notify" name="Notify checkout of outcome">
+      <bpmn:extensionElements>
+        <ns1:taskDefinition xmlns:ns1="http://camunda.org/schema/zeebe/1.0" type="rules-notify-checkout" retries="3" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_17</bpmn:incoming>
+      <bpmn:incoming>Flow_18</bpmn:incoming>
+      <bpmn:outgoing>Flow_19</bpmn:outgoing>
+    </bpmn:sendTask>
+    <bpmn:endEvent id="R_End" name="Done">
+      <bpmn:incoming>Flow_19</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_11" sourceRef="R_Start" targetRef="R_Receive" />
+    <bpmn:sequenceFlow id="Flow_12" sourceRef="R_Receive" targetRef="R_Send" />
+    <bpmn:sequenceFlow id="Flow_13" sourceRef="R_Send" targetRef="R_Wait" />
+    <bpmn:sequenceFlow id="Flow_14" sourceRef="R_Wait" targetRef="R_Gateway" />
+    <bpmn:sequenceFlow id="Flow_15" name="Approved" sourceRef="R_Gateway" targetRef="R_Confirm">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=paymentApproved = true</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_16" name="Declined" sourceRef="R_Gateway" targetRef="R_Decline" />
+    <bpmn:sequenceFlow id="Flow_17" sourceRef="R_Confirm" targetRef="R_Notify" />
+    <bpmn:sequenceFlow id="Flow_18" sourceRef="R_Decline" targetRef="R_Notify" />
+    <bpmn:sequenceFlow id="Flow_19" sourceRef="R_Notify" targetRef="R_End" />
+  </bpmn:process>
+  <bpmn:process id="Process_Service" name="Simulated Payment Service" isExecutable="true">
+    <bpmn:startEvent id="S_Start" name="Payment request received">
+      <bpmn:outgoing>Flow_20</bpmn:outgoing>
+      <bpmn:messageEventDefinition id="MessageDef_S_Start" messageRef="Message_ServiceRequest" />
+    </bpmn:startEvent>
+    <bpmn:exclusiveGateway id="S_Decide" name="Simulated payment result" default="Flow_22">
+      <bpmn:incoming>Flow_20</bpmn:incoming>
+      <bpmn:outgoing>Flow_21</bpmn:outgoing>
+      <bpmn:outgoing>Flow_22</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:task id="S_Approved" name="Simulate approved (no real charge)">
+      <bpmn:incoming>Flow_21</bpmn:incoming>
+      <bpmn:outgoing>Flow_23</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="S_Declined" name="Simulate declined (no real charge)">
+      <bpmn:incoming>Flow_22</bpmn:incoming>
+      <bpmn:outgoing>Flow_24</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:sendTask id="S_Send" name="Send payment response">
+      <bpmn:extensionElements>
+        <ns1:taskDefinition xmlns:ns1="http://camunda.org/schema/zeebe/1.0" type="simulation-send-response" retries="3" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_23</bpmn:incoming>
+      <bpmn:incoming>Flow_24</bpmn:incoming>
+      <bpmn:outgoing>Flow_25</bpmn:outgoing>
+    </bpmn:sendTask>
+    <bpmn:endEvent id="S_End" name="Response sent">
+      <bpmn:incoming>Flow_25</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_20" sourceRef="S_Start" targetRef="S_Decide" />
+    <bpmn:sequenceFlow id="Flow_21" name="Approved" sourceRef="S_Decide" targetRef="S_Approved">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=simulateApproved = true</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_22" name="Declined" sourceRef="S_Decide" targetRef="S_Declined" />
+    <bpmn:sequenceFlow id="Flow_23" sourceRef="S_Approved" targetRef="S_Send" />
+    <bpmn:sequenceFlow id="Flow_24" sourceRef="S_Declined" targetRef="S_Send" />
+    <bpmn:sequenceFlow id="Flow_25" sourceRef="S_Send" targetRef="S_End" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="Diagram_UC2">
+    <bpmndi:BPMNPlane id="Plane_UC2" bpmnElement="Collaboration_UC2">
+      <bpmndi:BPMNShape id="Shape_Participant_Customer" bpmnElement="Participant_Customer" isHorizontal="true">
+        <dc:Bounds x="155" y="50" width="1575" height="280" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_C_Start" bpmnElement="C_Start">
+        <dc:Bounds x="190" y="140" width="40" height="40" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="175" y="180" width="71" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_C_Fare" bpmnElement="C_Fare">
+        <dc:Bounds x="290" y="130" width="130" height="54" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_C_Review" bpmnElement="C_Review">
+        <dc:Bounds x="480" y="130" width="182" height="54" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_C_Method" bpmnElement="C_Method">
+        <dc:Bounds x="740" y="130" width="164" height="54" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_C_Send" bpmnElement="C_Send">
+        <dc:Bounds x="975" y="130" width="172" height="54" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_C_Receive" bpmnElement="C_Receive">
+        <dc:Bounds x="1210" y="130" width="174" height="54" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_C_Gateway" bpmnElement="C_Gateway" isMarkerVisible="true">
+        <dc:Bounds x="1440" y="132" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1438" y="182" width="55" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_C_Confirmed" bpmnElement="C_Confirmed">
+        <dc:Bounds x="1560" y="92" width="42" height="42" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1557" y="134" width="49" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_C_Retry" bpmnElement="C_Retry" isMarkerVisible="true">
+        <dc:Bounds x="1440" y="244" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1426" y="294" width="78" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_C_Abort" bpmnElement="C_Abort">
+        <dc:Bounds x="1560" y="265" width="42" height="42" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1548" y="307" width="66" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Edge_Flow_01" bpmnElement="Flow_01">
+        <di:waypoint x="230" y="160" />
+        <di:waypoint x="290" y="157" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_02" bpmnElement="Flow_02">
+        <di:waypoint x="420" y="157" />
+        <di:waypoint x="480" y="157" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_03" bpmnElement="Flow_03">
+        <di:waypoint x="662" y="157" />
+        <di:waypoint x="740" y="157" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_10" bpmnElement="Flow_10">
+        <di:waypoint x="1465" y="269" />
+        <di:waypoint x="1465" y="316" />
+        <di:waypoint x="822" y="316" />
+        <di:waypoint x="822" y="184" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1110" y="291" width="67" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_04" bpmnElement="Flow_04">
+        <di:waypoint x="904" y="157" />
+        <di:waypoint x="975" y="157" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_05" bpmnElement="Flow_05">
+        <di:waypoint x="1147" y="157" />
+        <di:waypoint x="1210" y="157" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_06" bpmnElement="Flow_06">
+        <di:waypoint x="1384" y="157" />
+        <di:waypoint x="1440" y="157" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_07" bpmnElement="Flow_07">
+        <di:waypoint x="1490" y="157" />
+        <di:waypoint x="1560" y="113" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1516" y="110" width="18" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_08" bpmnElement="Flow_08">
+        <di:waypoint x="1465" y="182" />
+        <di:waypoint x="1465" y="244" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1473" y="203" width="15" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_09" bpmnElement="Flow_09">
+        <di:waypoint x="1490" y="269" />
+        <di:waypoint x="1560" y="286" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1518" y="253" width="15" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Shape_Participant_Rules" bpmnElement="Participant_Rules" isHorizontal="true">
+        <dc:Bounds x="155" y="345" width="1575" height="235" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_R_Start" bpmnElement="R_Start">
+        <dc:Bounds x="190" y="417" width="40" height="40" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="186" y="457" width="49" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_R_Receive" bpmnElement="R_Receive">
+        <dc:Bounds x="285" y="408" width="185" height="54" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_R_Send" bpmnElement="R_Send">
+        <dc:Bounds x="545" y="408" width="190" height="54" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_R_Wait" bpmnElement="R_Wait">
+        <dc:Bounds x="815" y="408" width="170" height="54" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_R_Gateway" bpmnElement="R_Gateway" isMarkerVisible="true">
+        <dc:Bounds x="1050" y="408" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1049" y="458" width="52" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_R_Confirm" bpmnElement="R_Confirm">
+        <dc:Bounds x="1195" y="365" width="150" height="54" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_R_Decline" bpmnElement="R_Decline">
+        <dc:Bounds x="1195" y="480" width="174" height="54" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_R_Notify" bpmnElement="R_Notify">
+        <dc:Bounds x="1440" y="410" width="185" height="54" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_R_End" bpmnElement="R_End">
+        <dc:Bounds x="1670" y="416" width="40" height="40" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1677" y="456" width="27" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Edge_Flow_11" bpmnElement="Flow_11">
+        <di:waypoint x="230" y="437" />
+        <di:waypoint x="285" y="435" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_12" bpmnElement="Flow_12">
+        <di:waypoint x="470" y="435" />
+        <di:waypoint x="545" y="435" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_13" bpmnElement="Flow_13">
+        <di:waypoint x="735" y="435" />
+        <di:waypoint x="815" y="435" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_14" bpmnElement="Flow_14">
+        <di:waypoint x="985" y="435" />
+        <di:waypoint x="1050" y="433" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_15" bpmnElement="Flow_15">
+        <di:waypoint x="1100" y="433" />
+        <di:waypoint x="1195" y="392" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1124" y="388" width="48" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_16" bpmnElement="Flow_16">
+        <di:waypoint x="1100" y="433" />
+        <di:waypoint x="1195" y="507" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1126" y="445" width="43" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_17" bpmnElement="Flow_17">
+        <di:waypoint x="1345" y="392" />
+        <di:waypoint x="1400" y="392" />
+        <di:waypoint x="1400" y="437" />
+        <di:waypoint x="1440" y="437" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_18" bpmnElement="Flow_18">
+        <di:waypoint x="1369" y="507" />
+        <di:waypoint x="1400" y="507" />
+        <di:waypoint x="1400" y="437" />
+        <di:waypoint x="1440" y="437" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_19" bpmnElement="Flow_19">
+        <di:waypoint x="1625" y="437" />
+        <di:waypoint x="1670" y="436" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Shape_Participant_Service" bpmnElement="Participant_Service" isHorizontal="true">
+        <dc:Bounds x="155" y="580" width="1575" height="245" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_S_Start" bpmnElement="S_Start">
+        <dc:Bounds x="190" y="657" width="40" height="40" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="168" y="697" width="84" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_S_Decide" bpmnElement="S_Decide" isMarkerVisible="true">
+        <dc:Bounds x="405" y="651" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="394" y="701" width="73" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_S_Approved" bpmnElement="S_Approved">
+        <dc:Bounds x="600" y="595" width="204" height="54" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_S_Declined" bpmnElement="S_Declined">
+        <dc:Bounds x="600" y="722" width="204" height="54" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_S_Send" bpmnElement="S_Send">
+        <dc:Bounds x="950" y="655" width="192" height="54" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_S_End" bpmnElement="S_End">
+        <dc:Bounds x="1260" y="661" width="40" height="40" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1243" y="701" width="74" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Edge_Flow_20" bpmnElement="Flow_20">
+        <di:waypoint x="230" y="677" />
+        <di:waypoint x="405" y="676" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_21" bpmnElement="Flow_21">
+        <di:waypoint x="455" y="676" />
+        <di:waypoint x="600" y="622" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="504" y="624" width="48" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_22" bpmnElement="Flow_22">
+        <di:waypoint x="455" y="676" />
+        <di:waypoint x="600" y="749" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="506" y="688" width="43" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_23" bpmnElement="Flow_23">
+        <di:waypoint x="804" y="622" />
+        <di:waypoint x="877" y="622" />
+        <di:waypoint x="877" y="682" />
+        <di:waypoint x="950" y="682" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_24" bpmnElement="Flow_24">
+        <di:waypoint x="804" y="749" />
+        <di:waypoint x="877" y="749" />
+        <di:waypoint x="877" y="682" />
+        <di:waypoint x="950" y="682" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_25" bpmnElement="Flow_25">
+        <di:waypoint x="1142" y="682" />
+        <di:waypoint x="1260" y="681" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_MessageFlow_01" bpmnElement="MessageFlow_01">
+        <di:waypoint x="1061" y="184" />
+        <di:waypoint x="1061" y="344" />
+        <di:waypoint x="210" y="344" />
+        <di:waypoint x="210" y="417" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="594" y="319" width="84" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_MessageFlow_02" bpmnElement="MessageFlow_02">
+        <di:waypoint x="640" y="462" />
+        <di:waypoint x="640" y="573" />
+        <di:waypoint x="210" y="573" />
+        <di:waypoint x="210" y="657" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="383" y="548" width="84" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_MessageFlow_03" bpmnElement="MessageFlow_03">
+        <di:waypoint x="1046" y="655" />
+        <di:waypoint x="1046" y="555" />
+        <di:waypoint x="900" y="555" />
+        <di:waypoint x="900" y="462" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="950" y="530" width="46" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_MessageFlow_04" bpmnElement="MessageFlow_04">
+        <di:waypoint x="1532" y="410" />
+        <di:waypoint x="1532" y="340" />
+        <di:waypoint x="1297" y="340" />
+        <di:waypoint x="1297" y="184" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1380" y="315" width="70" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
