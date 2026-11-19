@@ -49,3 +49,17 @@ The module team will be added as collaborators at the end of the semester, as co
 - Never commit passwords, API keys or `.env` files.
 - Keep branches short-lived and commits small.
 - Everyone commits their own work under their own account.
+
+
+
+
+
+
+
+
+
+## Generative AI Acknowledgement
+In line with UWE Bristol guidelines and the UFCFTR-30-3 Assessment Brief, **Google Antigravity (Gemini)** was used only to assist with executable code (`workers.js`), Camunda 8 FEEL/IO configuration, form formatting, and checking traceability consistency. All i* and BPMN models/diagrams were authored by the group in Camunda Modeler, and all code/logic has been reviewed, tested, and understood by the team.
+
+**Reference (UWE Harvard):**  
+Google (2026) *Antigravity (Gemini)* [Generative AI]. Accessed via desktop IDE (Accessed: 19 November 2026).
