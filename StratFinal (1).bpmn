@@ -1,0 +1,644 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:zeebe="http://camunda.org/schema/zeebe/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_Strategic_Enhanced" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Web Modeler" exporterVersion="6a0669f" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.6.0">
+  <bpmn:collaboration id="Collaboration_Strategic_Enhanced">
+    <bpmn:participant id="Participant_Customer_BB" name="Customer (Blackbox)" />
+    <bpmn:participant id="Participant_Marketplace" name="Marketplace" processRef="Process_Marketplace_Strategic" />
+    <bpmn:participant id="Participant_Logistics" name="Logistics / Collection" processRef="Process_Logistics_Strategic" />
+    <bpmn:participant id="Participant_0pqihqw" name="Producer (Blackbox)" />
+    <bpmn:participant id="Participant_077zaes" name="Payment (Blackbox)" />
+    <bpmn:messageFlow id="MsgFlow_S_Cust_Basket" sourceRef="Participant_Customer_BB" targetRef="Start_Market_Order" messageRef="Msg_S_Basket" />
+    <bpmn:messageFlow id="MsgFlow_S_Cust_Amend" sourceRef="Task_CheckStock" targetRef="Participant_Customer_BB" />
+    <bpmn:messageFlow id="MsgFlow_S_Market_Log_Basket" sourceRef="Task_SelectFulfilment" targetRef="Start_Log_Checkout" messageRef="Msg_S_LogBasket" />
+    <bpmn:messageFlow id="MsgFlow_S_Log_Market_Options" sourceRef="End_Log_Options" targetRef="Task_SelectFulfilment" messageRef="Msg_S_Options" />
+    <bpmn:messageFlow id="MsgFlow_S_Cust_Choice" sourceRef="Participant_Customer_BB" targetRef="Task_SelectFulfilment" />
+    <bpmn:messageFlow id="MsgFlow_S_Cust_PayAuth" sourceRef="Participant_Customer_BB" targetRef="Task_PaySelect" />
+    <bpmn:messageFlow id="MsgFlow_S_Market_Cust_Receipt" name="Order confirmation &#38; receipt" sourceRef="Task_ReleaseOrder" targetRef="Participant_Customer_BB" />
+    <bpmn:messageFlow id="MsgFlow_S_Market_Log_Release" sourceRef="Task_ReleaseOrder" targetRef="Start_Log_Paid" messageRef="Msg_S_Release" />
+    <bpmn:messageFlow id="MsgFlow_S_Log_Cust_Handover" sourceRef="Task_Deliver" targetRef="Participant_Customer_BB" />
+    <bpmn:messageFlow id="MsgFlow_S_Log_Market_Complete" sourceRef="End_Log_Handover" targetRef="Catch_Market_Delivered" messageRef="Msg_S_Delivered" />
+    <bpmn:messageFlow id="Flow_0ql1uhb" name="Settlement &#38; order notification" sourceRef="Activity_0etbqaw" targetRef="Participant_0pqihqw" />
+    <bpmn:messageFlow id="Flow_1i0ho1w" name="Producer order ready" sourceRef="Participant_0pqihqw" targetRef="Task_Prepare" />
+    <bpmn:messageFlow id="Flow_0q4i1wz" sourceRef="Task_PaySelect" targetRef="Participant_077zaes" messageRef="Msg_S_PayReq" />
+    <bpmn:messageFlow id="Flow_10a1vwf" sourceRef="Participant_077zaes" targetRef="Task_ReleaseOrder" messageRef="Msg_S_PayAccepted" />
+    <bpmn:messageFlow id="Flow_0f6be18" sourceRef="Activity_14h3lmb" targetRef="Participant_077zaes" messageRef="Msg_S_PayFailed" />
+  </bpmn:collaboration>
+  <bpmn:message id="Msg_S_Basket" name="Basket submitted for checkout" />
+  <bpmn:message id="Msg_S_LogBasket" name="Basket sent for checkout" />
+  <bpmn:message id="Msg_S_Options" name="Fulfilment options sent to customer">
+    <bpmn:extensionElements>
+      <zeebe:subscription correlationKey="=orderRef" />
+    </bpmn:extensionElements>
+  </bpmn:message>
+  <bpmn:message id="Msg_S_Release" name="Order released to producers" />
+  <bpmn:message id="Msg_S_Delivered" name="Order delivered or collected">
+    <bpmn:extensionElements>
+      <zeebe:subscription correlationKey="=orderRef" />
+    </bpmn:extensionElements>
+  </bpmn:message>
+  <bpmn:message id="Msg_S_PayReq" name="Payment request sent" />
+  <bpmn:message id="Msg_S_PayAccepted" name="Payment accepted" />
+  <bpmn:message id="Msg_S_PayFailed" name="Payment failed" />
+  <bpmn:process id="Process_Marketplace_Strategic" name="Marketplace Commercial Lifecycle" isExecutable="true">
+    <bpmn:startEvent id="Start_Market_Order" name="Basket submitted for checkout">
+      <bpmn:outgoing>Flow_SM1</bpmn:outgoing>
+      <bpmn:messageEventDefinition id="MsgDef_SM_Start" messageRef="Msg_S_Basket" />
+    </bpmn:startEvent>
+    <bpmn:exclusiveGateway id="GW_StockConfirmed" name="Stock available?" default="Flow_SM_StockNo">
+      <bpmn:incoming>Flow_SM2</bpmn:incoming>
+      <bpmn:outgoing>Flow_SM_StockYes</bpmn:outgoing>
+      <bpmn:outgoing>Flow_SM_StockNo</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:exclusiveGateway id="GW_OrderConfirmed" name="Order confirmed?" default="Flow_SM_ConfirmNo">
+      <bpmn:incoming>Flow_SM3</bpmn:incoming>
+      <bpmn:outgoing>Flow_SM_ConfirmYes</bpmn:outgoing>
+      <bpmn:outgoing>Flow_SM_ConfirmNo</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:dataObjectReference id="DataObjRef_Basket" name="Validated Basket" dataObjectRef="DO_S_Basket" />
+    <bpmn:dataObject id="DO_S_Basket" />
+    <bpmn:task id="Task_CheckStock" name="Generate orderRef, check stock &#38; amend cart">
+      <bpmn:documentation>Mirrors Operational F1: generates orderRef, checks stock, notifies shortage, and loops on customer cart amendment (up to 15m timeout).</bpmn:documentation>
+      <bpmn:incoming>Flow_SM1</bpmn:incoming>
+      <bpmn:outgoing>Flow_SM2</bpmn:outgoing>
+      <bpmn:dataOutputAssociation id="DataOut_Basket">
+        <bpmn:targetRef>DataObjRef_Basket</bpmn:targetRef>
+      </bpmn:dataOutputAssociation>
+    </bpmn:task>
+    <bpmn:task id="Task_SelectFulfilment" name="Confirm fulfilment choice, split orders  &#38; review summary">
+      <bpmn:documentation>Mirrors Operational F1: requests delivery/collection choice if offered, splits order per producer in pence, sends summary, and awaits customer confirmation (15m timeout).</bpmn:documentation>
+      <bpmn:incoming>Flow_SM_StockYes</bpmn:incoming>
+      <bpmn:outgoing>Flow_SM3</bpmn:outgoing>
+      <bpmn:property id="Property_1rit10p" name="__targetRef_placeholder" />
+      <bpmn:dataInputAssociation id="DataIn_FulfilBasket">
+        <bpmn:sourceRef>DataObjRef_Basket</bpmn:sourceRef>
+        <bpmn:targetRef>Property_1rit10p</bpmn:targetRef>
+      </bpmn:dataInputAssociation>
+      <bpmn:dataOutputAssociation id="DataOut_Summary">
+        <bpmn:targetRef>DataObjRef_Summary</bpmn:targetRef>
+      </bpmn:dataOutputAssociation>
+    </bpmn:task>
+    <bpmn:task id="Task_PaySelect" name="Process payment &#38; settlement">
+      <bpmn:documentation>Mirrors Operational F2: checks duplicate orderRef, computes per-producer commission &amp; dues in pence, collects payment details, handles gateway retries/24h hold, deducts stock (or voids), issues receipt, and triggers settlement.</bpmn:documentation>
+      <bpmn:incoming>Flow_SM_ConfirmYes</bpmn:incoming>
+      <bpmn:outgoing>Flow_SM4</bpmn:outgoing>
+      <bpmn:property id="Property_0drnwyo" name="__targetRef_placeholder" />
+      <bpmn:dataInputAssociation id="DataIn_Basket">
+        <bpmn:sourceRef>DataObjRef_Summary</bpmn:sourceRef>
+        <bpmn:targetRef>Property_0drnwyo</bpmn:targetRef>
+      </bpmn:dataInputAssociation>
+      <bpmn:dataOutputAssociation id="DataOut_OrderRecord">
+        <bpmn:targetRef>DataObjRef_OrderRecord</bpmn:targetRef>
+      </bpmn:dataOutputAssociation>
+    </bpmn:task>
+    <bpmn:dataObjectReference id="DataObjRef_Summary" name="Producer Orders (pence)" dataObjectRef="DO_S_Summary" />
+    <bpmn:dataObject id="DO_S_Summary" />
+    <bpmn:sequenceFlow id="Flow_SM1" sourceRef="Start_Market_Order" targetRef="Task_CheckStock" />
+    <bpmn:sequenceFlow id="Flow_SM2" sourceRef="Task_CheckStock" targetRef="GW_StockConfirmed" />
+    <bpmn:sequenceFlow id="Flow_SM_StockYes" name="Yes" sourceRef="GW_StockConfirmed" targetRef="Task_SelectFulfilment">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=stockStatus = "ALL_AVAILABLE"</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_SM_StockNo" name="Timeout" sourceRef="GW_StockConfirmed" targetRef="GW_Market_FailMerge" />
+    <bpmn:sequenceFlow id="Flow_SM3" sourceRef="Task_SelectFulfilment" targetRef="GW_OrderConfirmed" />
+    <bpmn:sequenceFlow id="Flow_SM_ConfirmYes" name="Yes" sourceRef="GW_OrderConfirmed" targetRef="Task_PaySelect">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=orderConfirmed = true</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_SM_ConfirmNo" name="Timeout" sourceRef="GW_OrderConfirmed" targetRef="GW_Market_FailMerge" />
+    <bpmn:sequenceFlow id="Flow_SM4" sourceRef="Task_PaySelect" targetRef="GW_Market_Confirmed" />
+    <bpmn:sequenceFlow id="Flow_SM_Yes" name="Yes" sourceRef="GW_Market_Confirmed" targetRef="Activity_0ylt8yi">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=paymentConfirmed = true</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_SM_No" name="No" sourceRef="GW_Market_Confirmed" targetRef="Activity_14h3lmb" />
+    <bpmn:sequenceFlow id="Flow_SM5" sourceRef="Task_ReleaseOrder" targetRef="Catch_Market_Delivered" />
+    <bpmn:sequenceFlow id="Flow_SM6" sourceRef="Catch_Market_Delivered" targetRef="End_Market_Complete" />
+    <bpmn:sequenceFlow id="Flow_SM_ToAbandoned" sourceRef="GW_Market_FailMerge" targetRef="End_Market_Abandoned" />
+    <bpmn:endEvent id="End_Market_Complete" name="Order completed &#38; closed">
+      <bpmn:incoming>Flow_SM6</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:intermediateCatchEvent id="Catch_Market_Delivered" name="Order delivered or collected">
+      <bpmn:incoming>Flow_SM5</bpmn:incoming>
+      <bpmn:outgoing>Flow_SM6</bpmn:outgoing>
+      <bpmn:messageEventDefinition id="MsgDef_SM_Delivered" messageRef="Msg_S_Delivered" />
+    </bpmn:intermediateCatchEvent>
+    <bpmn:task id="Task_ReleaseOrder" name="Release order to producers &#38; send receipt">
+      <bpmn:incoming>Flow_0pe9olp</bpmn:incoming>
+      <bpmn:outgoing>Flow_SM5</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="Activity_0ylt8yi" name="Payement succesful">
+      <bpmn:incoming>Flow_SM_Yes</bpmn:incoming>
+      <bpmn:outgoing>Flow_0pe9olp</bpmn:outgoing>
+      <bpmn:property id="Property_1aaodpg" name="__targetRef_placeholder" />
+      <bpmn:dataInputAssociation id="DataIn_OrderRecord">
+        <bpmn:sourceRef>DataObjRef_OrderRecord</bpmn:sourceRef>
+        <bpmn:targetRef>Property_1aaodpg</bpmn:targetRef>
+      </bpmn:dataInputAssociation>
+    </bpmn:task>
+    <bpmn:sequenceFlow id="Flow_0pe9olp" sourceRef="Activity_0ylt8yi" targetRef="Task_ReleaseOrder" />
+    <bpmn:dataObjectReference id="DataObjRef_OrderRecord" name="Confirmed Order &#38; Receipt" dataObjectRef="DO_S_OrderRecord" />
+    <bpmn:dataObject id="DO_S_OrderRecord" />
+    <bpmn:exclusiveGateway id="GW_Market_Confirmed" name="Payment &#38; stock confirmed?" default="Flow_SM_No">
+      <bpmn:incoming>Flow_SM4</bpmn:incoming>
+      <bpmn:outgoing>Flow_SM_Yes</bpmn:outgoing>
+      <bpmn:outgoing>Flow_SM_No</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:endEvent id="End_Market_Abandoned" name="Checkout abandoned, payment failed, or out of stock">
+      <bpmn:incoming>Flow_SM_ToAbandoned</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:exclusiveGateway id="GW_Market_FailMerge">
+      <bpmn:incoming>Flow_SM_StockNo</bpmn:incoming>
+      <bpmn:incoming>Flow_SM_ConfirmNo</bpmn:incoming>
+      <bpmn:incoming>Flow_0gx8zpi</bpmn:incoming>
+      <bpmn:outgoing>Flow_SM_ToAbandoned</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="Flow_0gx8zpi" sourceRef="Activity_14h3lmb" targetRef="GW_Market_FailMerge" />
+    <bpmn:task id="Activity_14h3lmb" name="Payement failed">
+      <bpmn:incoming>Flow_SM_No</bpmn:incoming>
+      <bpmn:outgoing>Flow_0gx8zpi</bpmn:outgoing>
+    </bpmn:task>
+  </bpmn:process>
+  <bpmn:process id="Process_Logistics_Strategic" name="Logistics &#38; Fulfilment Operations" isExecutable="false">
+    <bpmn:laneSet id="LaneSet_Logistics">
+      <bpmn:lane id="Lane_Log_Execution" name="Stage 2: Post-Payment Fulfilment">
+        <bpmn:flowNodeRef>End_Log_Handover</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Activity_0etbqaw</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Start_Log_Paid</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_Deliver</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_Prepare</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_Log_Quoting" name="Stage 1: Pre-Checkout Quoting">
+        <bpmn:flowNodeRef>Start_Log_Checkout</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>End_Log_Options</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_Identify</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_Options</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:startEvent id="Start_Log_Checkout" name="Basket sent for fulfilment quoting">
+      <bpmn:outgoing>Flow_SL1</bpmn:outgoing>
+      <bpmn:messageEventDefinition id="MsgDef_SL_Basket" messageRef="Msg_S_LogBasket" />
+    </bpmn:startEvent>
+    <bpmn:endEvent id="End_Log_Options" name="Fulfilment options sent">
+      <bpmn:incoming>Flow_SL3</bpmn:incoming>
+      <bpmn:messageEventDefinition id="MsgDef_SL_Options" messageRef="Msg_S_Options" />
+    </bpmn:endEvent>
+    <bpmn:endEvent id="End_Log_Handover" name="Order delivered or collected">
+      <bpmn:incoming>Flow_SL6</bpmn:incoming>
+      <bpmn:messageEventDefinition id="MsgDef_SL_Handover" messageRef="Msg_S_Delivered" />
+    </bpmn:endEvent>
+    <bpmn:dataObjectReference id="DataObjRef_Manifest" name="Consolidated Order Parcel" dataObjectRef="DO_S_Manifest" />
+    <bpmn:dataObject id="DO_S_Manifest" />
+    <bpmn:dataObjectReference id="DataObjRef_Quote" name="Fulfilment Options Quote" dataObjectRef="DO_S_Quote" />
+    <bpmn:dataObject id="DO_S_Quote" />
+    <bpmn:task id="Activity_0etbqaw" name="Notify producers &#38; record settlement">
+      <bpmn:incoming>Flow_0kjzais</bpmn:incoming>
+      <bpmn:outgoing>Flow_1bf7nx7</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:startEvent id="Start_Log_Paid" name="Order released to producers">
+      <bpmn:outgoing>Flow_0kjzais</bpmn:outgoing>
+      <bpmn:messageEventDefinition id="MsgDef_SL_Paid" messageRef="Msg_S_Release" />
+    </bpmn:startEvent>
+    <bpmn:task id="Task_Identify" name="Identify producers">
+      <bpmn:incoming>Flow_SL1</bpmn:incoming>
+      <bpmn:outgoing>Flow_SL2</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="Task_Options" name="Offer delivery or collection">
+      <bpmn:incoming>Flow_SL2</bpmn:incoming>
+      <bpmn:outgoing>Flow_SL3</bpmn:outgoing>
+      <bpmn:dataOutputAssociation id="DataOut_Quote">
+        <bpmn:targetRef>DataObjRef_Quote</bpmn:targetRef>
+      </bpmn:dataOutputAssociation>
+    </bpmn:task>
+    <bpmn:task id="Task_Deliver" name="Deliver or collect order">
+      <bpmn:incoming>Flow_SL5</bpmn:incoming>
+      <bpmn:outgoing>Flow_SL6</bpmn:outgoing>
+      <bpmn:property id="Property_1boiagb" name="__targetRef_placeholder" />
+      <bpmn:dataInputAssociation id="DataIn_Manifest">
+        <bpmn:sourceRef>DataObjRef_Manifest</bpmn:sourceRef>
+        <bpmn:targetRef>Property_1boiagb</bpmn:targetRef>
+      </bpmn:dataInputAssociation>
+    </bpmn:task>
+    <bpmn:sequenceFlow id="Flow_SL1" sourceRef="Start_Log_Checkout" targetRef="Task_Identify" />
+    <bpmn:sequenceFlow id="Flow_SL3" sourceRef="Task_Options" targetRef="End_Log_Options" />
+    <bpmn:sequenceFlow id="Flow_SL6" sourceRef="Task_Deliver" targetRef="End_Log_Handover" />
+    <bpmn:sequenceFlow id="Flow_0kjzais" sourceRef="Start_Log_Paid" targetRef="Activity_0etbqaw" />
+    <bpmn:sequenceFlow id="Flow_1bf7nx7" sourceRef="Activity_0etbqaw" targetRef="Task_Prepare" />
+    <bpmn:sequenceFlow id="Flow_SL2" sourceRef="Task_Identify" targetRef="Task_Options" />
+    <bpmn:sequenceFlow id="Flow_SL5" sourceRef="Task_Prepare" targetRef="Task_Deliver" />
+    <bpmn:task id="Task_Prepare" name="Prepare producer order">
+      <bpmn:incoming>Flow_1bf7nx7</bpmn:incoming>
+      <bpmn:outgoing>Flow_SL5</bpmn:outgoing>
+      <bpmn:dataOutputAssociation id="DataOut_Manifest">
+        <bpmn:targetRef>DataObjRef_Manifest</bpmn:targetRef>
+      </bpmn:dataOutputAssociation>
+      <bpmn:multiInstanceLoopCharacteristics />
+    </bpmn:task>
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_Strategic_Enhanced">
+    <bpmndi:BPMNPlane id="BPMNPlane_Strategic_Enhanced" bpmnElement="Collaboration_Strategic_Enhanced">
+      <bpmndi:BPMNShape id="Participant_Customer_BB_di" bpmnElement="Participant_Customer_BB" isHorizontal="true">
+        <dc:Bounds x="140" y="-540" width="1440" height="65" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Participant_Marketplace_di" bpmnElement="Participant_Marketplace" isHorizontal="true">
+        <dc:Bounds x="140" y="-390" width="1440" height="403" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Start_Market_Order_di" bpmnElement="Start_Market_Order">
+        <dc:Bounds x="192" y="-170" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="168" y="-127" width="86" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="GW_StockConfirmed_di" bpmnElement="GW_StockConfirmed" isMarkerVisible="true">
+        <dc:Bounds x="445" y="-177" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="430" y="-201" width="81" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="GW_OrderConfirmed_di" bpmnElement="GW_OrderConfirmed" isMarkerVisible="true">
+        <dc:Bounds x="725" y="-177" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="708" y="-214" width="84" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DataObjRef_Basket_di" bpmnElement="DataObjRef_Basket">
+        <dc:Bounds x="402" y="-290" width="36" height="45" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="380" y="-243" width="80" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0mpczs3_di" bpmnElement="Task_CheckStock">
+        <dc:Bounds x="270" y="-192" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0ykd8ot_di" bpmnElement="Task_SelectFulfilment">
+        <dc:Bounds x="535" y="-192" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1xtnhpp_di" bpmnElement="Task_PaySelect">
+        <dc:Bounds x="820" y="-192" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DataObjRef_Summary_di" bpmnElement="DataObjRef_Summary">
+        <dc:Bounds x="692" y="-330" width="36" height="45" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="666" y="-283" width="88" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="End_Market_Complete_di" bpmnElement="End_Market_Complete">
+        <dc:Bounds x="1492" y="-170" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1468" y="-127" width="86" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Catch_Market_Delivered_di" bpmnElement="Catch_Market_Delivered">
+        <dc:Bounds x="1412" y="-170" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1387" y="-207" width="86" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_07w8ksj_di" bpmnElement="Task_ReleaseOrder">
+        <dc:Bounds x="1290" y="-192" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0ylt8yi_di" bpmnElement="Activity_0ylt8yi">
+        <dc:Bounds x="1130" y="-192" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DataObjRef_OrderRecord_di" bpmnElement="DataObjRef_OrderRecord">
+        <dc:Bounds x="1002" y="-353" width="36" height="45" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="976" y="-306" width="88" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="GW_Market_Confirmed_di" bpmnElement="GW_Market_Confirmed" isMarkerVisible="true">
+        <dc:Bounds x="1005" y="-275" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="988" y="-311" width="85" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="End_Market_Abandoned_di" bpmnElement="End_Market_Abandoned">
+        <dc:Bounds x="1162" y="-58" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1205" y="-60" width="110" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="GW_Market_FailMerge_di" bpmnElement="GW_Market_FailMerge" isMarkerVisible="true">
+        <dc:Bounds x="1075" y="-65" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_14h3lmb_di" bpmnElement="Activity_14h3lmb">
+        <dc:Bounds x="960" y="-140" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_SM1_di" bpmnElement="Flow_SM1">
+        <di:waypoint x="228" y="-152" />
+        <di:waypoint x="270" y="-152" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_SM2_di" bpmnElement="Flow_SM2">
+        <di:waypoint x="370" y="-152" />
+        <di:waypoint x="445" y="-152" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_SM_StockYes_di" bpmnElement="Flow_SM_StockYes">
+        <di:waypoint x="495" y="-152" />
+        <di:waypoint x="535" y="-152" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="506" y="-170" width="18" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_SM_StockNo_di" bpmnElement="Flow_SM_StockNo">
+        <di:waypoint x="470" y="-127" />
+        <di:waypoint x="470" y="-40" />
+        <di:waypoint x="1075" y="-40" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="492" y="-62" width="40" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_SM3_di" bpmnElement="Flow_SM3">
+        <di:waypoint x="635" y="-152" />
+        <di:waypoint x="725" y="-152" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_SM_ConfirmYes_di" bpmnElement="Flow_SM_ConfirmYes">
+        <di:waypoint x="775" y="-152" />
+        <di:waypoint x="820" y="-152" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="789" y="-170" width="18" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_SM_ConfirmNo_di" bpmnElement="Flow_SM_ConfirmNo">
+        <di:waypoint x="750" y="-127" />
+        <di:waypoint x="750" y="-40" />
+        <di:waypoint x="1075" y="-40" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="802" y="-62" width="40" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_SM4_di" bpmnElement="Flow_SM4">
+        <di:waypoint x="920" y="-152" />
+        <di:waypoint x="1030" y="-152" />
+        <di:waypoint x="1030" y="-225" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_SM_Yes_di" bpmnElement="Flow_SM_Yes">
+        <di:waypoint x="1055" y="-250" />
+        <di:waypoint x="1070" y="-250" />
+        <di:waypoint x="1070" y="-152" />
+        <di:waypoint x="1130" y="-152" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1072" y="-198" width="18" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_SM_No_di" bpmnElement="Flow_SM_No">
+        <di:waypoint x="1005" y="-250" />
+        <di:waypoint x="980" y="-250" />
+        <di:waypoint x="980" y="-162" />
+        <di:waypoint x="1000" y="-162" />
+        <di:waypoint x="1004" y="-140" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="983" y="-205" width="15" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_SM5_di" bpmnElement="Flow_SM5">
+        <di:waypoint x="1390" y="-152" />
+        <di:waypoint x="1412" y="-152" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_SM6_di" bpmnElement="Flow_SM6">
+        <di:waypoint x="1448" y="-152" />
+        <di:waypoint x="1492" y="-152" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_SM_ToAbandoned_di" bpmnElement="Flow_SM_ToAbandoned">
+        <di:waypoint x="1075" y="-40" />
+        <di:waypoint x="955" y="-40" />
+        <di:waypoint x="955" y="0" />
+        <di:waypoint x="1180" y="0" />
+        <di:waypoint x="1180" y="-22" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0pe9olp_di" bpmnElement="Flow_0pe9olp">
+        <di:waypoint x="1230" y="-152" />
+        <di:waypoint x="1290" y="-152" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0gx8zpi_di" bpmnElement="Flow_0gx8zpi">
+        <di:waypoint x="1060" y="-100" />
+        <di:waypoint x="1100" y="-100" />
+        <di:waypoint x="1100" y="-65" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Participant_Logistics_di" bpmnElement="Participant_Logistics" isHorizontal="true">
+        <dc:Bounds x="140" y="614" width="1440" height="428" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_Log_Quoting_di" bpmnElement="Lane_Log_Quoting" isHorizontal="true">
+        <dc:Bounds x="170" y="614" width="1410" height="243" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_Log_Execution_di" bpmnElement="Lane_Log_Execution" isHorizontal="true">
+        <dc:Bounds x="170" y="857" width="1410" height="185" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Start_Log_Checkout_di" bpmnElement="Start_Log_Checkout">
+        <dc:Bounds x="292" y="749" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="266" y="792" width="88" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="End_Log_Options_di" bpmnElement="End_Log_Options">
+        <dc:Bounds x="762" y="749" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="735" y="792" width="90" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="End_Log_Handover_di" bpmnElement="End_Log_Handover">
+        <dc:Bounds x="1342" y="929" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1316" y="972" width="89" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DataObjRef_Manifest_di" bpmnElement="DataObjRef_Manifest">
+        <dc:Bounds x="784" y="867" width="36" height="45" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="758" y="915" width="88" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DataObjRef_Quote_di" bpmnElement="DataObjRef_Quote">
+        <dc:Bounds x="552" y="634" width="36" height="45" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="526" y="684" width="88" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0etbqaw_di" bpmnElement="Activity_0etbqaw">
+        <dc:Bounds x="430" y="907" width="120" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Start_Log_Paid_di" bpmnElement="Start_Log_Paid">
+        <dc:Bounds x="292" y="929" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="196" y="933" width="86" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_02jfcfs_di" bpmnElement="Task_Identify">
+        <dc:Bounds x="380" y="727" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0aahljo_di" bpmnElement="Task_Options">
+        <dc:Bounds x="565" y="727" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1ebzdom_di" bpmnElement="Task_Deliver">
+        <dc:Bounds x="860" y="907" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_01eldxv_di" bpmnElement="Task_Prepare">
+        <dc:Bounds x="595" y="907" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_SL1_di" bpmnElement="Flow_SL1">
+        <di:waypoint x="328" y="767" />
+        <di:waypoint x="380" y="767" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_SL3_di" bpmnElement="Flow_SL3">
+        <di:waypoint x="665" y="767" />
+        <di:waypoint x="762" y="767" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_SL6_di" bpmnElement="Flow_SL6">
+        <di:waypoint x="960" y="947" />
+        <di:waypoint x="1342" y="947" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0kjzais_di" bpmnElement="Flow_0kjzais">
+        <di:waypoint x="328" y="947" />
+        <di:waypoint x="430" y="947" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1bf7nx7_di" bpmnElement="Flow_1bf7nx7">
+        <di:waypoint x="550" y="947" />
+        <di:waypoint x="595" y="947" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_SL2_di" bpmnElement="Flow_SL2">
+        <di:waypoint x="480" y="767" />
+        <di:waypoint x="565" y="767" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_SL5_di" bpmnElement="Flow_SL5">
+        <di:waypoint x="695" y="947" />
+        <di:waypoint x="860" y="947" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="BPMNShape_1thwd1y" bpmnElement="Participant_0pqihqw" isHorizontal="true">
+        <dc:Bounds x="140" y="1170" width="1440" height="120" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Participant_0k4bcpi_di" bpmnElement="Participant_077zaes" isHorizontal="true">
+        <dc:Bounds x="1550" y="270" width="670" height="150" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="DataOut_Basket_di" bpmnElement="DataOut_Basket">
+        <di:waypoint x="370" y="-182" />
+        <di:waypoint x="370" y="-227" />
+        <di:waypoint x="402" y="-255" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DataIn_FulfilBasket_di" bpmnElement="DataIn_FulfilBasket">
+        <di:waypoint x="438" y="-265" />
+        <di:waypoint x="560" y="-227" />
+        <di:waypoint x="560" y="-192" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DataOut_Summary_di" bpmnElement="DataOut_Summary">
+        <di:waypoint x="635" y="-184" />
+        <di:waypoint x="660" y="-227" />
+        <di:waypoint x="692" y="-289" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DataIn_Basket_di" bpmnElement="DataIn_Basket">
+        <di:waypoint x="728" y="-299" />
+        <di:waypoint x="840" y="-227" />
+        <di:waypoint x="840" y="-192" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DataOut_OrderRecord_di" bpmnElement="DataOut_OrderRecord">
+        <di:waypoint x="920" y="-183" />
+        <di:waypoint x="950" y="-227" />
+        <di:waypoint x="1005" y="-308" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DataIn_OrderRecord_di" bpmnElement="DataIn_OrderRecord">
+        <di:waypoint x="1038" y="-319" />
+        <di:waypoint x="1150" y="-227" />
+        <di:waypoint x="1178" y="-192" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DataOut_Quote_di" bpmnElement="DataOut_Quote">
+        <di:waypoint x="625" y="727" />
+        <di:waypoint x="583" y="679" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DataIn_Manifest_di" bpmnElement="DataIn_Manifest">
+        <di:waypoint x="820" y="889" />
+        <di:waypoint x="880" y="889" />
+        <di:waypoint x="886" y="907" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DataOut_Manifest_di" bpmnElement="DataOut_Manifest">
+        <di:waypoint x="695" y="923" />
+        <di:waypoint x="730" y="889" />
+        <di:waypoint x="784" y="889" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="MsgFlow_S_Cust_Basket_di" bpmnElement="MsgFlow_S_Cust_Basket">
+        <di:waypoint x="210" y="-475" />
+        <di:waypoint x="210" y="-170" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="MsgFlow_S_Cust_Amend_di" bpmnElement="MsgFlow_S_Cust_Amend">
+        <di:waypoint x="342" y="-192" />
+        <di:waypoint x="342" y="-475" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="MsgFlow_S_Market_Log_Basket_di" bpmnElement="MsgFlow_S_Market_Log_Basket">
+        <di:waypoint x="575" y="-112" />
+        <di:waypoint x="575" y="540" />
+        <di:waypoint x="310" y="540" />
+        <di:waypoint x="310" y="749" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="MsgFlow_S_Log_Market_Options_di" bpmnElement="MsgFlow_S_Log_Market_Options">
+        <di:waypoint x="780" y="749" />
+        <di:waypoint x="780" y="530" />
+        <di:waypoint x="690" y="530" />
+        <di:waypoint x="690" y="-152" />
+        <di:waypoint x="635" y="-152" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="MsgFlow_S_Cust_Choice_di" bpmnElement="MsgFlow_S_Cust_Choice">
+        <di:waypoint x="612" y="-475" />
+        <di:waypoint x="612" y="-192" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="MsgFlow_S_Cust_PayAuth_di" bpmnElement="MsgFlow_S_Cust_PayAuth">
+        <di:waypoint x="902" y="-475" />
+        <di:waypoint x="902" y="-192" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="MsgFlow_S_Market_Cust_Receipt_di" bpmnElement="MsgFlow_S_Market_Cust_Receipt">
+        <di:waypoint x="1365" y="-192" />
+        <di:waypoint x="1365" y="-475" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1329" y="-462" width="71" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="MsgFlow_S_Market_Log_Release_di" bpmnElement="MsgFlow_S_Market_Log_Release">
+        <di:waypoint x="1365" y="-112" />
+        <di:waypoint x="1365" y="580" />
+        <di:waypoint x="310" y="580" />
+        <di:waypoint x="310" y="929" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="MsgFlow_S_Log_Cust_Handover_di" bpmnElement="MsgFlow_S_Log_Cust_Handover">
+        <di:waypoint x="932" y="907" />
+        <di:waypoint x="932" y="-475" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="MsgFlow_S_Log_Market_Complete_di" bpmnElement="MsgFlow_S_Log_Market_Complete">
+        <di:waypoint x="1363" y="929" />
+        <di:waypoint x="1430" y="460" />
+        <di:waypoint x="1430" y="-134" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0ql1uhb_di" bpmnElement="Flow_0ql1uhb">
+        <di:waypoint x="490" y="987" />
+        <di:waypoint x="490" y="1170" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="448" y="1068" width="84" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1i0ho1w_di" bpmnElement="Flow_1i0ho1w">
+        <di:waypoint x="667" y="1170" />
+        <di:waypoint x="667" y="987" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="630" y="1068" width="74" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0q4i1wz_di" bpmnElement="Flow_0q4i1wz">
+        <di:waypoint x="840" y="-112" />
+        <di:waypoint x="840" y="100" />
+        <di:waypoint x="1600" y="100" />
+        <di:waypoint x="1600" y="270" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_10a1vwf_di" bpmnElement="Flow_10a1vwf">
+        <di:waypoint x="1885" y="270" />
+        <di:waypoint x="1885" y="44" />
+        <di:waypoint x="1325" y="44" />
+        <di:waypoint x="1325" y="-112" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0f6be18_di" bpmnElement="Flow_0f6be18">
+        <di:waypoint x="1010" y="-60" />
+        <di:waypoint x="1010" y="81" />
+        <di:waypoint x="1885" y="81" />
+        <di:waypoint x="1885" y="270" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
