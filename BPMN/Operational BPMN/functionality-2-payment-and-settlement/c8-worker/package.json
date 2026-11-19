@@ -1,0 +1,9 @@
+{
+  "name": "c8-worker",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Test workers for the payment-and-settlement BPMN",
+  "dependencies": {
+    "@camunda8/sdk": "8.6.38"
+  }
+}
