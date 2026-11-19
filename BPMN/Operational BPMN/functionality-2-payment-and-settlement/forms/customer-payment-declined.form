@@ -1,0 +1,27 @@
+{
+  "components": [
+    {
+      "text": "# Payment declined\n\nre-enter your payment details.",
+      "type": "text",
+      "id": "Field_intro"
+    },
+    {
+      "label": "New card number",
+      "type": "textfield",
+      "id": "Field_card",
+      "key": "cardNumber",
+      "validate": {
+        "required": true
+      }
+    }
+  ],
+  "type": "default",
+  "id": "customer-retry-payment",
+  "executionPlatform": "Camunda Cloud",
+  "executionPlatformVersion": "8.6.0",
+  "exporter": {
+    "name": "Camunda Modeler",
+    "version": "5.52.0"
+  },
+  "schemaVersion": 19
+}
