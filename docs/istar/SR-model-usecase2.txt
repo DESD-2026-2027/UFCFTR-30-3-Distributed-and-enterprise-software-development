@@ -1,0 +1,1895 @@
+{
+  "actors": [
+    {
+      "id": "cu",
+      "text": "Customer",
+      "type": "istar.Actor",
+      "x": 43,
+      "y": 59,
+      "customProperties": {
+        "Description": "SH1 individual customers, SH2 community groups, SH3 restaurants and cafés"
+      },
+      "nodes": [
+        {
+          "id": "c_root",
+          "text": "Check out a multi-producer basket",
+          "type": "istar.Task",
+          "x": 1222,
+          "y": 119,
+          "customProperties": {
+            "Description": "SR only · root of the customer's checkout"
+          }
+        },
+        {
+          "id": "c_sg1",
+          "text": "Convenient buying",
+          "type": "istar.Quality",
+          "x": 1582,
+          "y": 119,
+          "customProperties": {
+            "Description": "SG1 · FR1"
+          }
+        },
+        {
+          "id": "c_sg3",
+          "text": "Clear supplier information",
+          "type": "istar.Quality",
+          "x": 1762,
+          "y": 119,
+          "customProperties": {
+            "Description": "SG3 · FR7"
+          }
+        },
+        {
+          "id": "c_sg6",
+          "text": "Low administration across many suppliers",
+          "type": "istar.Quality",
+          "x": 1942,
+          "y": 119,
+          "customProperties": {
+            "Description": "SG6 · from SH3 · FR9"
+          }
+        },
+        {
+          "id": "c_g1",
+          "text": "Add products from one or more producers to one basket",
+          "type": "istar.Goal",
+          "x": 484,
+          "y": 203,
+          "customProperties": {
+            "Description": "G1 · FR1, FR4"
+          }
+        },
+        {
+          "id": "c_amend",
+          "text": "Amend basket if items are unavailable",
+          "type": "istar.Task",
+          "x": 682,
+          "y": 259,
+          "customProperties": {
+            "Description": "Camunda: Customer Cart Amendment Form · FR3"
+          }
+        },
+        {
+          "id": "c_choose",
+          "text": "Choose delivery or collection",
+          "type": "istar.Task",
+          "x": 862,
+          "y": 276,
+          "customProperties": {
+            "Description": "Camunda: Delivery or Collection Selection Form · FR6"
+          }
+        },
+        {
+          "id": "c_g4",
+          "text": "Pay and receive order confirmation",
+          "type": "istar.Goal",
+          "x": 1762,
+          "y": 259,
+          "customProperties": {
+            "Description": "G4 · FR12 to FR15, FR20"
+          }
+        },
+        {
+          "id": "c_add",
+          "text": "Add products to basket",
+          "type": "istar.Task",
+          "x": 481,
+          "y": 403,
+          "customProperties": {
+            "Description": "FR1 · US1"
+          }
+        },
+        {
+          "id": "c_pay",
+          "text": "Pay for the order",
+          "type": "istar.Task",
+          "x": 1762,
+          "y": 399,
+          "customProperties": {
+            "Description": "BPMN Customer lane"
+          }
+        },
+        {
+          "id": "c_sg5",
+          "text": "Reliable, consistent supply",
+          "type": "istar.Quality",
+          "x": 43,
+          "y": 557,
+          "customProperties": {
+            "Description": "SG5 · from SH2 · FR2"
+          }
+        },
+        {
+          "id": "c_g2",
+          "text": "Have the basket accepted (stock confirmed)",
+          "type": "istar.Goal",
+          "x": 682,
+          "y": 539,
+          "customProperties": {
+            "Description": "G2 · FR2, FR3"
+          }
+        },
+        {
+          "id": "c_g3",
+          "text": "Know the delivery or collection arrangements",
+          "type": "istar.Goal",
+          "x": 862,
+          "y": 539,
+          "customProperties": {
+            "Description": "G3 · FR5 to FR7"
+          }
+        },
+        {
+          "id": "c_split",
+          "text": "Order split by producer",
+          "type": "istar.Goal",
+          "x": 1044,
+          "y": 513,
+          "customProperties": {
+            "Description": "From SH3 · FR9"
+          }
+        },
+        {
+          "id": "c_review",
+          "text": "Review and confirm order",
+          "type": "istar.Task",
+          "x": 1222,
+          "y": 539,
+          "customProperties": {
+            "Description": "FR7, FR8"
+          }
+        },
+        {
+          "id": "c_reenter",
+          "text": "Re-enter payment details after a decline",
+          "type": "istar.Task",
+          "x": 1402,
+          "y": 539,
+          "customProperties": {
+            "Description": "BPMN: Re-enters payment details / Sends new payment details · Camunda: Payment Declined - Retry Form · FR15"
+          }
+        },
+        {
+          "id": "c_enter",
+          "text": "Enter payment details",
+          "type": "istar.Task",
+          "x": 1582,
+          "y": 539,
+          "customProperties": {
+            "Description": "BPMN: Send payment detail · Camunda: Payment Entry Form · FR12"
+          }
+        },
+        {
+          "id": "c_conf",
+          "text": "Order confirmed",
+          "type": "istar.Goal",
+          "x": 1762,
+          "y": 517,
+          "customProperties": {
+            "Description": "BPMN: Receipt received · FR14, FR20"
+          }
+        },
+        {
+          "id": "c_sg2",
+          "text": "Seamless checkout",
+          "type": "istar.Quality",
+          "x": 1942,
+          "y": 539,
+          "customProperties": {
+            "Description": "SG2 · FR3, FR15 to FR17"
+          }
+        },
+        {
+          "id": "c_sg4",
+          "text": "Secure payment and personal data",
+          "type": "istar.Quality",
+          "x": 2122,
+          "y": 539,
+          "customProperties": {
+            "Description": "SG4 · NFR2, NFR3"
+          }
+        }
+      ]
+    },
+    {
+      "id": "mk",
+      "text": "Marketplace",
+      "type": "istar.Actor",
+      "x": 360,
+      "y": 917,
+      "customProperties": {
+        "Description": "SH6 network owner and its platform. Roles in the RACI (Order, Inventory, Finance services) not drawn separately"
+      },
+      "nodes": [
+        {
+          "id": "m_g8",
+          "text": "Offer one checkout for multi-vendor orders",
+          "type": "istar.Goal",
+          "x": 450,
+          "y": 937,
+          "customProperties": {
+            "Description": "G8 · FR1, FR9 · Functionality 1"
+          }
+        },
+        {
+          "id": "m_basket",
+          "text": "Basket accepted",
+          "type": "istar.Goal",
+          "x": 680,
+          "y": 937,
+          "customProperties": {
+            "Description": "FR2, FR3"
+          }
+        },
+        {
+          "id": "m_deliv",
+          "text": "Delivery or collection arrangements known",
+          "type": "istar.Goal",
+          "x": 860,
+          "y": 937,
+          "customProperties": {
+            "Description": "FR5 to FR7"
+          }
+        },
+        {
+          "id": "m_split",
+          "text": "Order split by producer",
+          "type": "istar.Goal",
+          "x": 1040,
+          "y": 937,
+          "customProperties": {
+            "Description": "FR9"
+          }
+        },
+        {
+          "id": "m_place",
+          "text": "Customers place orders",
+          "type": "istar.Goal",
+          "x": 1220,
+          "y": 967,
+          "customProperties": {
+            "Description": "SR only · revenue depends on it"
+          }
+        },
+        {
+          "id": "m_send",
+          "text": "Send payment request to gateway",
+          "type": "istar.Task",
+          "x": 2350,
+          "y": 937,
+          "customProperties": {
+            "Description": "BPMN: Send payment request to gateway · Camunda: Sandbox Payment API Client · FR12, FR13"
+          }
+        },
+        {
+          "id": "m_conf",
+          "text": "Order confirmed",
+          "type": "istar.Goal",
+          "x": 1760,
+          "y": 937,
+          "customProperties": {
+            "Description": "FR14 · Functionality 2"
+          }
+        },
+        {
+          "id": "m_seam",
+          "text": "Seamless checkout",
+          "type": "istar.Quality",
+          "x": 1940,
+          "y": 937,
+          "customProperties": {
+            "Description": "Receives D5 · SG2"
+          }
+        },
+        {
+          "id": "m_secure",
+          "text": "Secure payment and personal data",
+          "type": "istar.Quality",
+          "x": 2120,
+          "y": 937,
+          "customProperties": {
+            "Description": "Receives D6 · SG4, NFR2, NFR3"
+          }
+        },
+        {
+          "id": "m_run",
+          "text": "Run multi-vendor checkout",
+          "type": "istar.Task",
+          "x": 450,
+          "y": 1097,
+          "customProperties": {
+            "Description": "FR1 to FR9 · nothing here enforces the 48 h notice (D18 unmet)"
+          }
+        },
+        {
+          "id": "m_splitT",
+          "text": "Split order into producer elements",
+          "type": "istar.Task",
+          "x": 1039,
+          "y": 1053,
+          "customProperties": {
+            "Description": "Camunda: Order Segregation Engine · FR9"
+          }
+        },
+        {
+          "id": "m_g7",
+          "text": "Calculate the 5% commission automatically",
+          "type": "istar.Goal",
+          "x": 1220,
+          "y": 1097,
+          "customProperties": {
+            "Description": "G7 · FR10, FR11"
+          }
+        },
+        {
+          "id": "m_ref",
+          "text": "Check order reference (ignore duplicates)",
+          "type": "istar.Task",
+          "x": 1400,
+          "y": 1097,
+          "customProperties": {
+            "Description": "BPMN: Check order reference, Already processed?, Return previous result · FR13, NFR6"
+          }
+        },
+        {
+          "id": "m_take",
+          "text": "Take payment for the order",
+          "type": "istar.Task",
+          "x": 1760,
+          "y": 1097,
+          "customProperties": {
+            "Description": "BPMN Payment pool"
+          }
+        },
+        {
+          "id": "m_mark",
+          "text": "Mark order CONFIRMED and send receipt",
+          "type": "istar.Task",
+          "x": 2168,
+          "y": 1143,
+          "customProperties": {
+            "Description": "BPMN: Mark order CONFIRMED, Send receipt to Customer · FR14, FR20"
+          }
+        },
+        {
+          "id": "m_result",
+          "text": "Act on payment result",
+          "type": "istar.Task",
+          "x": 2350,
+          "y": 1097,
+          "customProperties": {
+            "Description": "BPMN: Payment result gateway (Approved / Declined / Unavailable) · FR14, FR15"
+          }
+        },
+        {
+          "id": "m_sg9",
+          "text": "Viable business",
+          "type": "istar.Quality",
+          "x": 1034,
+          "y": 1171,
+          "customProperties": {
+            "Description": "SG9 · FR11"
+          }
+        },
+        {
+          "id": "m_calc",
+          "text": "Calculate subtotal, commission and producer dues",
+          "type": "istar.Task",
+          "x": 1220,
+          "y": 1306,
+          "customProperties": {
+            "Description": "BPMN: Calculate subtotal, commission and producer dues · Camunda: Commission Calculation Engine · FR10, FR11, NFR7"
+          }
+        },
+        {
+          "id": "m_sg12",
+          "text": "Traceable records",
+          "type": "istar.Quality",
+          "x": 1400,
+          "y": 1247,
+          "customProperties": {
+            "Description": "SG12 · FR13, NFR4"
+          }
+        },
+        {
+          "id": "m_sg11",
+          "text": "Regulatory compliance",
+          "type": "istar.Quality",
+          "x": 1604,
+          "y": 1238,
+          "customProperties": {
+            "Description": "SG11 · NFR3"
+          }
+        },
+        {
+          "id": "m_sg10",
+          "text": "Revenue protected",
+          "type": "istar.Quality",
+          "x": 1940,
+          "y": 1247,
+          "customProperties": {
+            "Description": "SG10 · FR15 to FR17, NFR6"
+          }
+        },
+        {
+          "id": "m_decl",
+          "text": "Retry declined payment up to 3 times",
+          "type": "istar.Task",
+          "x": 2350,
+          "y": 1247,
+          "customProperties": {
+            "Description": "BPMN: Increase attempts, Inform Customer to Retry, PAYMENT FAILED keeps basket · FR15"
+          }
+        },
+        {
+          "id": "m_stock",
+          "text": "Verify stock for each item",
+          "type": "istar.Task",
+          "x": 680,
+          "y": 1397,
+          "customProperties": {
+            "Description": "Camunda: Stock Verification Service · FR2"
+          }
+        },
+        {
+          "id": "m_fopt",
+          "text": "Read producer fulfilment options",
+          "type": "istar.Task",
+          "x": 860,
+          "y": 1397,
+          "customProperties": {
+            "Description": "Camunda: Fulfilment Options Service · FR5, FR6"
+          }
+        },
+        {
+          "id": "m_settle",
+          "text": "Record settlement amounts per order reference",
+          "type": "istar.Task",
+          "x": 1747,
+          "y": 1392,
+          "customProperties": {
+            "Description": "BPMN Settlement lane: Record settlement amounts · NFR4, US15"
+          }
+        },
+        {
+          "id": "m_notify",
+          "text": "Notify producers of their order element",
+          "type": "istar.Task",
+          "x": 1580,
+          "y": 1416,
+          "customProperties": {
+            "Description": "BPMN Settlement lane: Notify producers · Camunda: Producer Notification Dispatcher · FR19, NFR1"
+          }
+        },
+        {
+          "id": "m_deduct",
+          "text": "Deduct stock after payment approval",
+          "type": "istar.Task",
+          "x": 1274,
+          "y": 1428,
+          "customProperties": {
+            "Description": "BPMN: Deduct stock, Stock reduced?, Void Payment, Inform Customer item unavailable · Camunda: Inventory Deduction Service · FR18 · voids the payment and informs the customer if stock is gone"
+          }
+        },
+        {
+          "id": "m_audit",
+          "text": "Transparent audit trail",
+          "type": "istar.Quality",
+          "x": 1941,
+          "y": 1390,
+          "customProperties": {
+            "Description": "Receives D16 · SG8, NFR4"
+          }
+        },
+        {
+          "id": "m_effort",
+          "text": "Little technical effort for producers",
+          "type": "istar.Quality",
+          "x": 2120,
+          "y": 1397,
+          "customProperties": {
+            "Description": "Receives D17 · SG7"
+          }
+        },
+        {
+          "id": "m_outage",
+          "text": "Retry outage, then hold order as PAYMENT_PENDING",
+          "type": "istar.Task",
+          "x": 2350,
+          "y": 1397,
+          "customProperties": {
+            "Description": "BPMN: Increase outage retries, Wait 30 seconds, set Payment Pending, 24-hour hold expires, Set Canceled · 3 retries at 30 s, 24 h hold · FR16, FR17"
+          }
+        }
+      ]
+    },
+    {
+      "id": "ps",
+      "text": "Payment Service",
+      "type": "istar.Actor",
+      "x": 2850,
+      "y": 1130,
+      "customProperties": {
+        "Description": "SH7 sandbox payment provider · BPMN pool Payment Service (gateway)"
+      },
+      "nodes": []
+    },
+    {
+      "id": "pr",
+      "text": "Producer",
+      "type": "istar.Actor",
+      "x": 200,
+      "y": 1760,
+      "customProperties": {
+        "Description": "SH4, SH5 · BPMN pools Producers and Logistics/Collection"
+      },
+      "nodes": [
+        {
+          "id": "p_g6",
+          "text": "Be notified with at least 48 hours' notice",
+          "type": "istar.Goal",
+          "x": 450,
+          "y": 1780,
+          "customProperties": {
+            "Description": "G6 · FR19 · not enforced at checkout yet"
+          }
+        },
+        {
+          "id": "p_stock",
+          "text": "Keep stock levels up to date",
+          "type": "istar.Task",
+          "x": 680,
+          "y": 1780,
+          "customProperties": {
+            "Description": "FR2"
+          }
+        },
+        {
+          "id": "p_opts",
+          "text": "Set delivery or collection options in profile",
+          "type": "istar.Task",
+          "x": 855,
+          "y": 1822,
+          "customProperties": {
+            "Description": "FR5, FR6"
+          }
+        },
+        {
+          "id": "p_g5",
+          "text": "Receive orders without manual customer communication",
+          "type": "istar.Goal",
+          "x": 1580,
+          "y": 1780,
+          "customProperties": {
+            "Description": "G5 · FR19"
+          }
+        },
+        {
+          "id": "p_sg8",
+          "text": "Transparent audit trail",
+          "type": "istar.Quality",
+          "x": 1940,
+          "y": 1780,
+          "customProperties": {
+            "Description": "SG8 · NFR4"
+          }
+        },
+        {
+          "id": "p_income",
+          "text": "Income from customer orders",
+          "type": "istar.Goal",
+          "x": 200,
+          "y": 1930,
+          "customProperties": {
+            "Description": "SR only"
+          }
+        },
+        {
+          "id": "p_sell",
+          "text": "Sell produce through the marketplace",
+          "type": "istar.Task",
+          "x": 450,
+          "y": 1930,
+          "customProperties": {
+            "Description": ""
+          }
+        },
+        {
+          "id": "p_sg7",
+          "text": "Little technical effort",
+          "type": "istar.Quality",
+          "x": 1400,
+          "y": 1930,
+          "customProperties": {
+            "Description": "SG7 · FR19"
+          }
+        },
+        {
+          "id": "p_root",
+          "text": "Produce sold through the network",
+          "type": "istar.Goal",
+          "x": 450,
+          "y": 2070,
+          "customProperties": {
+            "Description": "SR only"
+          }
+        }
+      ]
+    }
+  ],
+  "orphans": [],
+  "dependencies": [
+    {
+      "id": "D1",
+      "text": "D1: Basket accepted (stock confirmed)",
+      "type": "istar.Goal",
+      "x": 680,
+      "y": 720,
+      "customProperties": {
+        "Description": "FR2, FR3"
+      },
+      "source": "c_g2",
+      "target": "m_basket"
+    },
+    {
+      "id": "D2",
+      "text": "D2: Delivery or collection arrangements known",
+      "type": "istar.Goal",
+      "x": 860,
+      "y": 720,
+      "customProperties": {
+        "Description": "FR5 to FR7"
+      },
+      "source": "c_g3",
+      "target": "m_deliv"
+    },
+    {
+      "id": "D3",
+      "text": "D3: Order split by producer",
+      "type": "istar.Goal",
+      "x": 1040,
+      "y": 720,
+      "customProperties": {
+        "Description": "FR9 · from SH3"
+      },
+      "source": "c_split",
+      "target": "m_split"
+    },
+    {
+      "id": "D9",
+      "text": "D9: Order placed",
+      "type": "istar.Goal",
+      "x": 1220,
+      "y": 720,
+      "customProperties": {
+        "Description": "Revenue and commission · FR8"
+      },
+      "source": "m_place",
+      "target": "c_review"
+    },
+    {
+      "id": "D10",
+      "text": "D10: Payment details",
+      "type": "istar.Resource",
+      "x": 2350,
+      "y": 720,
+      "customProperties": {
+        "Description": "FR12"
+      },
+      "source": "m_send",
+      "target": "c_enter"
+    },
+    {
+      "id": "D4",
+      "text": "D4: Order confirmed",
+      "type": "istar.Goal",
+      "x": 1760,
+      "y": 720,
+      "customProperties": {
+        "Description": "FR14"
+      },
+      "source": "c_conf",
+      "target": "m_conf"
+    },
+    {
+      "id": "D5",
+      "text": "D5: Seamless checkout",
+      "type": "istar.Quality",
+      "x": 1940,
+      "y": 720,
+      "customProperties": {
+        "Description": "In tension with retry waits and the pending hold"
+      },
+      "source": "c_sg2",
+      "target": "m_seam"
+    },
+    {
+      "id": "D6",
+      "text": "D6: Secure payment and personal data",
+      "type": "istar.Quality",
+      "x": 2120,
+      "y": 720,
+      "customProperties": {
+        "Description": "NFR2, NFR3"
+      },
+      "source": "c_sg4",
+      "target": "m_secure"
+    },
+    {
+      "id": "D11",
+      "text": "D11: Current stock levels",
+      "type": "istar.Resource",
+      "x": 680,
+      "y": 1590,
+      "customProperties": {
+        "Description": "FR2"
+      },
+      "source": "m_stock",
+      "target": "p_stock"
+    },
+    {
+      "id": "D12",
+      "text": "D12: Delivery or collection options",
+      "type": "istar.Resource",
+      "x": 860,
+      "y": 1590,
+      "customProperties": {
+        "Description": "FR5, FR6"
+      },
+      "source": "m_fopt",
+      "target": "p_opts"
+    },
+    {
+      "id": "D18",
+      "text": "D18: Order notice of at least 48 hours",
+      "type": "istar.Goal",
+      "x": 450,
+      "y": 1590,
+      "customProperties": {
+        "Description": "G6 · not enforced at checkout: unmet in this SR"
+      },
+      "source": "p_g6",
+      "target": "m_run"
+    },
+    {
+      "id": "D15",
+      "text": "D15: Notified of their own orders",
+      "type": "istar.Goal",
+      "x": 1580,
+      "y": 1590,
+      "customProperties": {
+        "Description": "FR19"
+      },
+      "source": "p_g5",
+      "target": "m_notify"
+    },
+    {
+      "id": "D16",
+      "text": "D16: Transparent audit trail",
+      "type": "istar.Quality",
+      "x": 1940,
+      "y": 1590,
+      "customProperties": {
+        "Description": "NFR4"
+      },
+      "source": "p_sg8",
+      "target": "m_audit"
+    },
+    {
+      "id": "D17",
+      "text": "D17: Little technical effort",
+      "type": "istar.Quality",
+      "x": 2144,
+      "y": 1633,
+      "customProperties": {
+        "Description": "SG7"
+      },
+      "source": "p_stock",
+      "target": "m_effort"
+    },
+    {
+      "id": "D13",
+      "text": "D13: Payment authorised",
+      "type": "istar.Goal",
+      "x": 2600,
+      "y": 1000,
+      "customProperties": {
+        "Description": "FR14 to FR17"
+      },
+      "source": "m_send",
+      "target": "ps"
+    },
+    {
+      "id": "D14",
+      "text": "D14: Payment request with order reference",
+      "type": "istar.Resource",
+      "x": 2600,
+      "y": 860,
+      "customProperties": {
+        "Description": "FR13"
+      },
+      "source": "ps",
+      "target": "m_send"
+    },
+    {
+      "id": "D21",
+      "text": "D21: Payment result (approved or declined)",
+      "type": "istar.Resource",
+      "x": 2600,
+      "y": 1140,
+      "customProperties": {
+        "Description": "FR14, FR15"
+      },
+      "source": "m_result",
+      "target": "ps"
+    },
+    {
+      "id": "D20",
+      "text": "D20: Payment service available",
+      "type": "istar.Quality",
+      "x": 2600,
+      "y": 1320,
+      "customProperties": {
+        "Description": "FR16, FR17, NFR6"
+      },
+      "source": "m_outage",
+      "target": "ps"
+    },
+    {
+      "id": "D8",
+      "text": "D8: Reliable, consistent supply",
+      "type": "istar.Quality",
+      "x": 40,
+      "y": 1100,
+      "customProperties": {
+        "Description": "From SH2"
+      },
+      "source": "c_sg5",
+      "target": "p_sell"
+    },
+    {
+      "id": "D19",
+      "text": "D19: Orders",
+      "type": "istar.Resource",
+      "x": 200,
+      "y": 703,
+      "customProperties": {
+        "Description": ""
+      },
+      "source": "p_income",
+      "target": "c_review"
+    }
+  ],
+  "links": [
+    {
+      "id": "ddc03c35-706b-4744-9108-b70021cc749b",
+      "type": "istar.DependencyLink",
+      "source": "D19",
+      "target": "c_review"
+    },
+    {
+      "id": "644d61b7-ff3e-4025-8c19-04dee1c6aaac",
+      "type": "istar.DependencyLink",
+      "source": "p_income",
+      "target": "D19"
+    },
+    {
+      "id": "e5fda22e-ccb3-44d6-b547-f53494cc4321",
+      "type": "istar.DependencyLink",
+      "source": "D8",
+      "target": "p_sell"
+    },
+    {
+      "id": "0def31df-7322-4700-92dc-55f6c1425111",
+      "type": "istar.DependencyLink",
+      "source": "c_sg5",
+      "target": "D8"
+    },
+    {
+      "id": "a6bc520e-84b6-4d5a-84d2-df530038c79b",
+      "type": "istar.DependencyLink",
+      "source": "D20",
+      "target": "ps"
+    },
+    {
+      "id": "bb7b0f78-806f-4244-938c-57571e25be78",
+      "type": "istar.DependencyLink",
+      "source": "m_outage",
+      "target": "D20"
+    },
+    {
+      "id": "966eb02d-50fe-4f18-86c9-20ab628cb5b9",
+      "type": "istar.DependencyLink",
+      "source": "D21",
+      "target": "ps"
+    },
+    {
+      "id": "359373db-0373-45d0-8ba9-1ded7483284f",
+      "type": "istar.DependencyLink",
+      "source": "m_result",
+      "target": "D21"
+    },
+    {
+      "id": "48b9bbb3-87f1-41eb-a9b4-22e3588ac015",
+      "type": "istar.DependencyLink",
+      "source": "D14",
+      "target": "m_send"
+    },
+    {
+      "id": "f50f5fe0-7005-460c-bd83-96a57605c194",
+      "type": "istar.DependencyLink",
+      "source": "ps",
+      "target": "D14"
+    },
+    {
+      "id": "7c8db38e-f73b-49d6-8c3f-a3be414909eb",
+      "type": "istar.DependencyLink",
+      "source": "D13",
+      "target": "ps"
+    },
+    {
+      "id": "5665ca7c-066b-4854-9612-1f9dd5087afd",
+      "type": "istar.DependencyLink",
+      "source": "m_send",
+      "target": "D13"
+    },
+    {
+      "id": "e176de7e-92e3-4dbf-b7d9-46772c9cf00b",
+      "type": "istar.DependencyLink",
+      "source": "D17",
+      "target": "m_effort"
+    },
+    {
+      "id": "68d76065-0f36-43b1-ad53-f9586cb059f8",
+      "type": "istar.DependencyLink",
+      "source": "p_stock",
+      "target": "D17"
+    },
+    {
+      "id": "35f8f9cf-9dd6-4457-9843-43ec4730dbeb",
+      "type": "istar.DependencyLink",
+      "source": "D16",
+      "target": "m_audit"
+    },
+    {
+      "id": "fa458f2d-feb0-42ca-8d4c-181db63386f8",
+      "type": "istar.DependencyLink",
+      "source": "p_sg8",
+      "target": "D16"
+    },
+    {
+      "id": "fd1278c9-decc-40d9-a9dd-dd950af91ef5",
+      "type": "istar.DependencyLink",
+      "source": "D15",
+      "target": "m_notify"
+    },
+    {
+      "id": "722383c1-8bbf-472c-9a70-f1935477c130",
+      "type": "istar.DependencyLink",
+      "source": "p_g5",
+      "target": "D15"
+    },
+    {
+      "id": "42ff51b7-2511-4eba-802a-b35013c16f2f",
+      "type": "istar.DependencyLink",
+      "source": "D18",
+      "target": "m_run"
+    },
+    {
+      "id": "9b6afbaa-0223-4bcf-8e1b-d5cbaaa4387e",
+      "type": "istar.DependencyLink",
+      "source": "p_g6",
+      "target": "D18"
+    },
+    {
+      "id": "600b749d-08ae-4c21-a113-e9d7cff57494",
+      "type": "istar.DependencyLink",
+      "source": "D12",
+      "target": "p_opts"
+    },
+    {
+      "id": "b8414734-bd1d-4e24-981e-8a21dabed457",
+      "type": "istar.DependencyLink",
+      "source": "m_fopt",
+      "target": "D12"
+    },
+    {
+      "id": "116df744-3af9-4146-bb1f-063cf4bd152c",
+      "type": "istar.DependencyLink",
+      "source": "D11",
+      "target": "p_stock"
+    },
+    {
+      "id": "02da35d5-127a-49a7-8285-42d2fbee2517",
+      "type": "istar.DependencyLink",
+      "source": "m_stock",
+      "target": "D11"
+    },
+    {
+      "id": "92c046ee-3b32-4424-95c4-d8bfe5c84650",
+      "type": "istar.DependencyLink",
+      "source": "D6",
+      "target": "m_secure"
+    },
+    {
+      "id": "f1808a2a-cad7-4061-ba42-094027b61d7e",
+      "type": "istar.DependencyLink",
+      "source": "c_sg4",
+      "target": "D6"
+    },
+    {
+      "id": "2bf6d314-1572-4d38-83d9-abb313e8f6cd",
+      "type": "istar.DependencyLink",
+      "source": "D5",
+      "target": "m_seam"
+    },
+    {
+      "id": "977da8d3-a437-46f0-8132-9ad6e9e0c115",
+      "type": "istar.DependencyLink",
+      "source": "c_sg2",
+      "target": "D5"
+    },
+    {
+      "id": "ac5ee0e6-750f-4186-80d6-fb1437a68f34",
+      "type": "istar.DependencyLink",
+      "source": "D4",
+      "target": "m_conf"
+    },
+    {
+      "id": "1c5beb2e-585b-4822-8c37-2d931746805f",
+      "type": "istar.DependencyLink",
+      "source": "c_conf",
+      "target": "D4"
+    },
+    {
+      "id": "00e0cc3f-54f4-4f1b-8e60-65780e29e427",
+      "type": "istar.DependencyLink",
+      "source": "D10",
+      "target": "c_enter"
+    },
+    {
+      "id": "f717adde-ad45-4f42-b383-4305bcd75232",
+      "type": "istar.DependencyLink",
+      "source": "m_send",
+      "target": "D10"
+    },
+    {
+      "id": "13d2f4db-36cc-4e1b-b5e0-9012442be79c",
+      "type": "istar.DependencyLink",
+      "source": "D9",
+      "target": "c_review"
+    },
+    {
+      "id": "8c3dab72-7c7e-4795-955d-a5492af5124d",
+      "type": "istar.DependencyLink",
+      "source": "m_place",
+      "target": "D9"
+    },
+    {
+      "id": "8e867c31-59f6-4695-85e2-88dc7263da09",
+      "type": "istar.DependencyLink",
+      "source": "D3",
+      "target": "m_split"
+    },
+    {
+      "id": "9bd1b0df-d92e-40bc-8ae0-352a9ff88f58",
+      "type": "istar.DependencyLink",
+      "source": "c_split",
+      "target": "D3"
+    },
+    {
+      "id": "5b5994a1-5d47-49ca-8c27-b68f7d816a92",
+      "type": "istar.DependencyLink",
+      "source": "D2",
+      "target": "m_deliv"
+    },
+    {
+      "id": "e2b106b0-da37-4fdd-b6e7-220d0dac92a8",
+      "type": "istar.DependencyLink",
+      "source": "c_g3",
+      "target": "D2"
+    },
+    {
+      "id": "6f57fa1a-d2a9-464d-b766-7fd402ed938f",
+      "type": "istar.DependencyLink",
+      "source": "D1",
+      "target": "m_basket"
+    },
+    {
+      "id": "87ba5ac9-efac-4711-b300-65464ce99693",
+      "type": "istar.DependencyLink",
+      "source": "c_g2",
+      "target": "D1"
+    },
+    {
+      "id": "f5008eb7-e667-4039-a6e7-5ead3ae04cdf",
+      "type": "istar.AndRefinementLink",
+      "source": "c_g1",
+      "target": "c_root"
+    },
+    {
+      "id": "c582be08-a2d6-4921-a4d9-5d1b92f791a6",
+      "type": "istar.AndRefinementLink",
+      "source": "c_amend",
+      "target": "c_root"
+    },
+    {
+      "id": "d75ba52e-dc06-4808-8488-e751a0e3e6f3",
+      "type": "istar.AndRefinementLink",
+      "source": "c_choose",
+      "target": "c_root"
+    },
+    {
+      "id": "9a54e64b-2358-4c84-8e44-0159626abc9c",
+      "type": "istar.AndRefinementLink",
+      "source": "c_g2",
+      "target": "c_root"
+    },
+    {
+      "id": "8e91c4f1-e75e-42d6-b9bf-289e30b79989",
+      "type": "istar.AndRefinementLink",
+      "source": "c_g3",
+      "target": "c_root"
+    },
+    {
+      "id": "4733fd78-d01e-4661-a513-9d88ca338f4a",
+      "type": "istar.AndRefinementLink",
+      "source": "c_split",
+      "target": "c_root"
+    },
+    {
+      "id": "14c0a7f1-e5cc-4ce0-b341-a6fcd98e6c61",
+      "type": "istar.AndRefinementLink",
+      "source": "c_review",
+      "target": "c_root"
+    },
+    {
+      "id": "5e6a6f73-5f11-4f28-af6e-e022471824b4",
+      "type": "istar.AndRefinementLink",
+      "source": "c_g4",
+      "target": "c_root"
+    },
+    {
+      "id": "ad277a29-5ff0-4651-ac37-0799408b72da",
+      "type": "istar.OrRefinementLink",
+      "source": "c_add",
+      "target": "c_g1"
+    },
+    {
+      "id": "d976d246-b08a-4567-9a95-ea86b29c6085",
+      "type": "istar.OrRefinementLink",
+      "source": "c_pay",
+      "target": "c_g4"
+    },
+    {
+      "id": "e0de80f8-0be0-4a43-9536-1e42ddd911ef",
+      "type": "istar.AndRefinementLink",
+      "source": "c_enter",
+      "target": "c_pay"
+    },
+    {
+      "id": "e3979665-29bd-4192-b3c7-2c357cca8273",
+      "type": "istar.AndRefinementLink",
+      "source": "c_reenter",
+      "target": "c_pay"
+    },
+    {
+      "id": "00f8ddb2-3332-4194-8d9c-419cf5ebe8f5",
+      "type": "istar.AndRefinementLink",
+      "source": "c_conf",
+      "target": "c_pay"
+    },
+    {
+      "id": "81f230b7-31e8-4f1c-bfd1-16fd56e06bc0",
+      "type": "istar.ContributionLink",
+      "source": "c_root",
+      "target": "c_sg1",
+      "label": "help"
+    },
+    {
+      "id": "8079dab4-ede4-4388-ac31-03676241182a",
+      "type": "istar.ContributionLink",
+      "source": "c_review",
+      "target": "c_sg3",
+      "label": "help"
+    },
+    {
+      "id": "1db08c3b-16a3-4a66-abee-60ef2205bdda",
+      "type": "istar.ContributionLink",
+      "source": "c_split",
+      "target": "c_sg6",
+      "label": "help"
+    },
+    {
+      "id": "56d60767-bb2b-4fd1-a5f8-4753ea5975aa",
+      "type": "istar.ContributionLink",
+      "source": "c_reenter",
+      "target": "c_sg1",
+      "label": "hurt"
+    },
+    {
+      "id": "4d1ff40b-00e3-47a4-8949-c1902846bf71",
+      "type": "istar.OrRefinementLink",
+      "source": "m_run",
+      "target": "m_g8"
+    },
+    {
+      "id": "e8a7a259-c94b-4d74-9d84-0a48a0ca6765",
+      "type": "istar.AndRefinementLink",
+      "source": "m_basket",
+      "target": "m_run"
+    },
+    {
+      "id": "e89d0cd0-f468-4e5a-afb9-302ef23fbd7f",
+      "type": "istar.AndRefinementLink",
+      "source": "m_deliv",
+      "target": "m_run"
+    },
+    {
+      "id": "4d3476ba-273b-435f-8e4d-eb1bcac51ede",
+      "type": "istar.AndRefinementLink",
+      "source": "m_split",
+      "target": "m_run"
+    },
+    {
+      "id": "9a4e8d55-f337-45e4-8eb7-50332ddf9ad2",
+      "type": "istar.AndRefinementLink",
+      "source": "m_place",
+      "target": "m_run"
+    },
+    {
+      "id": "04bb4cc4-d583-4149-b6ee-ca8d219d4d22",
+      "type": "istar.OrRefinementLink",
+      "source": "m_stock",
+      "target": "m_basket"
+    },
+    {
+      "id": "10128afb-b84a-4e3c-a95e-9686b26aed20",
+      "type": "istar.OrRefinementLink",
+      "source": "m_fopt",
+      "target": "m_deliv"
+    },
+    {
+      "id": "cf13503b-c361-469d-9b2c-03ecca611652",
+      "type": "istar.OrRefinementLink",
+      "source": "m_splitT",
+      "target": "m_split"
+    },
+    {
+      "id": "b288a618-5d75-4cd2-81ec-ae4dbeb14a30",
+      "type": "istar.OrRefinementLink",
+      "source": "m_take",
+      "target": "m_conf"
+    },
+    {
+      "id": "56af80ae-f542-4795-a5be-e92b7ade5533",
+      "type": "istar.OrRefinementLink",
+      "source": "m_calc",
+      "target": "m_g7"
+    },
+    {
+      "id": "ff615267-7158-415c-aad9-1e59bd96ba9e",
+      "type": "istar.AndRefinementLink",
+      "source": "m_ref",
+      "target": "m_take"
+    },
+    {
+      "id": "06a89905-fa40-4818-988f-69afe6b8034b",
+      "type": "istar.AndRefinementLink",
+      "source": "m_g7",
+      "target": "m_take"
+    },
+    {
+      "id": "f2464255-4339-4e00-854f-524054dd5f30",
+      "type": "istar.AndRefinementLink",
+      "source": "m_send",
+      "target": "m_take"
+    },
+    {
+      "id": "a4304bb9-2375-4c95-85bc-68fd079ae164",
+      "type": "istar.AndRefinementLink",
+      "source": "m_result",
+      "target": "m_take"
+    },
+    {
+      "id": "97847c77-4ebc-4175-a00a-071e2fedc818",
+      "type": "istar.AndRefinementLink",
+      "source": "m_decl",
+      "target": "m_take"
+    },
+    {
+      "id": "078febd3-d73c-4506-b7da-c71933c0127e",
+      "type": "istar.AndRefinementLink",
+      "source": "m_outage",
+      "target": "m_take"
+    },
+    {
+      "id": "cd4e0a5a-78e1-4d89-8ce9-bc92e8dab718",
+      "type": "istar.AndRefinementLink",
+      "source": "m_deduct",
+      "target": "m_take"
+    },
+    {
+      "id": "f48176f4-7c34-4144-92b8-51aec109546e",
+      "type": "istar.AndRefinementLink",
+      "source": "m_mark",
+      "target": "m_take"
+    },
+    {
+      "id": "d34f78c9-6e7f-42b0-85ca-01cf7ef12071",
+      "type": "istar.AndRefinementLink",
+      "source": "m_notify",
+      "target": "m_take"
+    },
+    {
+      "id": "f3730223-edfc-4944-8991-d510a365f6f1",
+      "type": "istar.AndRefinementLink",
+      "source": "m_settle",
+      "target": "m_take"
+    },
+    {
+      "id": "3dbddebc-dcfe-4dbc-a74e-1ef99aaec116",
+      "type": "istar.ContributionLink",
+      "source": "m_outage",
+      "target": "m_seam",
+      "label": "hurt"
+    },
+    {
+      "id": "56619c6a-1e83-4f35-9e9c-273c3743aead",
+      "type": "istar.ContributionLink",
+      "source": "m_outage",
+      "target": "m_sg10",
+      "label": "help"
+    },
+    {
+      "id": "1ec878a4-45cc-42fc-84aa-57c53a0cf640",
+      "type": "istar.ContributionLink",
+      "source": "m_decl",
+      "target": "m_sg10",
+      "label": "help"
+    },
+    {
+      "id": "c5f105ea-2f6c-4a85-a8f4-39895636f483",
+      "type": "istar.ContributionLink",
+      "source": "m_decl",
+      "target": "m_seam",
+      "label": "hurt"
+    },
+    {
+      "id": "0cc19217-ef9b-4ac0-92d8-365604025add",
+      "type": "istar.ContributionLink",
+      "source": "m_stock",
+      "target": "m_seam",
+      "label": "help"
+    },
+    {
+      "id": "9d18e9fc-7e1d-405b-897d-20ed577e4321",
+      "type": "istar.ContributionLink",
+      "source": "m_ref",
+      "target": "m_sg10",
+      "label": "help"
+    },
+    {
+      "id": "667670fd-7e9b-4d75-8f7c-f5b48cd28cf2",
+      "type": "istar.ContributionLink",
+      "source": "m_ref",
+      "target": "m_sg12",
+      "label": "help"
+    },
+    {
+      "id": "1421d287-ef3b-48f5-8996-04ad66bd6235",
+      "type": "istar.ContributionLink",
+      "source": "m_calc",
+      "target": "m_sg9",
+      "label": "help"
+    },
+    {
+      "id": "f8371ff5-7724-497b-8407-f7eeab0b6961",
+      "type": "istar.ContributionLink",
+      "source": "m_place",
+      "target": "m_sg9",
+      "label": "help"
+    },
+    {
+      "id": "099391e8-0895-4da7-9c64-40260a5175a1",
+      "type": "istar.ContributionLink",
+      "source": "m_settle",
+      "target": "m_audit",
+      "label": "make"
+    },
+    {
+      "id": "df4f5986-dc77-4fc0-9160-d3d882fe327c",
+      "type": "istar.ContributionLink",
+      "source": "m_settle",
+      "target": "m_sg12",
+      "label": "help"
+    },
+    {
+      "id": "0edca87f-b61d-449c-a448-4af9bfd47443",
+      "type": "istar.ContributionLink",
+      "source": "m_settle",
+      "target": "m_sg11",
+      "label": "hurt"
+    },
+    {
+      "id": "d0e85d2d-6cf8-438b-ada9-fc79c3832359",
+      "type": "istar.ContributionLink",
+      "source": "m_notify",
+      "target": "m_effort",
+      "label": "help"
+    },
+    {
+      "id": "25a8baa6-6ef7-49c9-89cb-22745640edc6",
+      "type": "istar.ContributionLink",
+      "source": "m_send",
+      "target": "m_secure",
+      "label": "help"
+    },
+    {
+      "id": "969cac5d-0991-410a-b85a-98a8045e0848",
+      "type": "istar.ContributionLink",
+      "source": "m_deduct",
+      "target": "m_sg10",
+      "label": "hurt"
+    },
+    {
+      "id": "45e677da-571d-46e1-b356-f8cded340b6c",
+      "type": "istar.OrRefinementLink",
+      "source": "p_sell",
+      "target": "p_root"
+    },
+    {
+      "id": "06a203da-a22b-4b64-a2e2-d5e4c5878980",
+      "type": "istar.AndRefinementLink",
+      "source": "p_g6",
+      "target": "p_sell"
+    },
+    {
+      "id": "d1fe4d84-a630-4252-8a05-cf6ab0dde2b7",
+      "type": "istar.AndRefinementLink",
+      "source": "p_stock",
+      "target": "p_sell"
+    },
+    {
+      "id": "11724d00-c327-4196-85f8-1d2e832f9c2d",
+      "type": "istar.AndRefinementLink",
+      "source": "p_opts",
+      "target": "p_sell"
+    },
+    {
+      "id": "fb414c0a-88ca-4381-a5c3-953689baaa58",
+      "type": "istar.AndRefinementLink",
+      "source": "p_g5",
+      "target": "p_sell"
+    },
+    {
+      "id": "88ec4464-d62a-4799-8cc1-9238151686e0",
+      "type": "istar.AndRefinementLink",
+      "source": "p_income",
+      "target": "p_sell"
+    },
+    {
+      "id": "9326c4c6-d795-4bb2-801b-cf466894eb0c",
+      "type": "istar.ContributionLink",
+      "source": "p_stock",
+      "target": "p_sg7",
+      "label": "hurt"
+    },
+    {
+      "id": "38f21820-6ff8-43a5-844c-1e917e2c5926",
+      "type": "istar.ContributionLink",
+      "source": "p_g5",
+      "target": "p_sg7",
+      "label": "help"
+    }
+  ],
+  "display": {
+    "c_root": {
+      "width": 140,
+      "height": 60
+    },
+    "c_sg1": {
+      "width": 140,
+      "height": 70
+    },
+    "c_sg3": {
+      "width": 140,
+      "height": 70
+    },
+    "c_sg6": {
+      "width": 140,
+      "height": 70
+    },
+    "c_g1": {
+      "width": 140,
+      "height": 60
+    },
+    "c_amend": {
+      "width": 140,
+      "height": 60
+    },
+    "c_choose": {
+      "width": 140,
+      "height": 60
+    },
+    "c_g4": {
+      "width": 140,
+      "height": 60
+    },
+    "c_add": {
+      "width": 140,
+      "height": 60
+    },
+    "c_pay": {
+      "width": 140,
+      "height": 60
+    },
+    "c_sg5": {
+      "width": 140,
+      "height": 70
+    },
+    "c_g2": {
+      "width": 140,
+      "height": 60
+    },
+    "c_g3": {
+      "width": 140,
+      "height": 60
+    },
+    "c_split": {
+      "width": 140,
+      "height": 60
+    },
+    "c_review": {
+      "width": 140,
+      "height": 60
+    },
+    "c_reenter": {
+      "width": 140,
+      "height": 60
+    },
+    "c_enter": {
+      "width": 140,
+      "height": 60
+    },
+    "c_conf": {
+      "width": 140,
+      "height": 60
+    },
+    "c_sg2": {
+      "width": 140,
+      "height": 70
+    },
+    "c_sg4": {
+      "width": 140,
+      "height": 70
+    },
+    "m_g8": {
+      "width": 140,
+      "height": 60
+    },
+    "m_basket": {
+      "width": 140,
+      "height": 60
+    },
+    "m_deliv": {
+      "width": 140,
+      "height": 60
+    },
+    "m_split": {
+      "width": 140,
+      "height": 60
+    },
+    "m_place": {
+      "width": 140,
+      "height": 60
+    },
+    "m_send": {
+      "width": 140,
+      "height": 60
+    },
+    "m_conf": {
+      "width": 140,
+      "height": 60
+    },
+    "m_seam": {
+      "width": 140,
+      "height": 70
+    },
+    "m_secure": {
+      "width": 140,
+      "height": 70
+    },
+    "m_run": {
+      "width": 140,
+      "height": 60
+    },
+    "m_splitT": {
+      "width": 140,
+      "height": 60
+    },
+    "m_g7": {
+      "width": 140,
+      "height": 60
+    },
+    "m_ref": {
+      "width": 140,
+      "height": 60
+    },
+    "m_take": {
+      "width": 140,
+      "height": 60
+    },
+    "m_mark": {
+      "width": 140,
+      "height": 60
+    },
+    "m_result": {
+      "width": 140,
+      "height": 60
+    },
+    "m_sg9": {
+      "width": 140,
+      "height": 70
+    },
+    "m_calc": {
+      "width": 140,
+      "height": 60
+    },
+    "m_sg12": {
+      "width": 140,
+      "height": 70
+    },
+    "m_sg11": {
+      "width": 140,
+      "height": 70
+    },
+    "m_sg10": {
+      "width": 140,
+      "height": 70
+    },
+    "m_decl": {
+      "width": 140,
+      "height": 60
+    },
+    "m_stock": {
+      "width": 140,
+      "height": 60
+    },
+    "m_fopt": {
+      "width": 140,
+      "height": 60
+    },
+    "m_settle": {
+      "width": 140,
+      "height": 60
+    },
+    "m_notify": {
+      "width": 140,
+      "height": 60
+    },
+    "m_deduct": {
+      "width": 140,
+      "height": 60
+    },
+    "m_audit": {
+      "width": 140,
+      "height": 70
+    },
+    "m_effort": {
+      "width": 140,
+      "height": 70
+    },
+    "m_outage": {
+      "width": 140,
+      "height": 60
+    },
+    "p_g6": {
+      "width": 140,
+      "height": 60
+    },
+    "p_stock": {
+      "width": 140,
+      "height": 60
+    },
+    "p_opts": {
+      "width": 140,
+      "height": 60
+    },
+    "p_g5": {
+      "width": 140,
+      "height": 60
+    },
+    "p_sg8": {
+      "width": 140,
+      "height": 70
+    },
+    "p_income": {
+      "width": 140,
+      "height": 60
+    },
+    "p_sell": {
+      "width": 140,
+      "height": 60
+    },
+    "p_sg7": {
+      "width": 140,
+      "height": 70
+    },
+    "p_root": {
+      "width": 140,
+      "height": 60
+    },
+    "D1": {
+      "width": 140,
+      "height": 60
+    },
+    "D2": {
+      "width": 140,
+      "height": 60
+    },
+    "D3": {
+      "width": 140,
+      "height": 60
+    },
+    "D9": {
+      "width": 140,
+      "height": 60
+    },
+    "D10": {
+      "width": 140,
+      "height": 60
+    },
+    "D4": {
+      "width": 140,
+      "height": 60
+    },
+    "D5": {
+      "width": 140,
+      "height": 70
+    },
+    "D6": {
+      "width": 140,
+      "height": 70
+    },
+    "D11": {
+      "width": 140,
+      "height": 60
+    },
+    "D12": {
+      "width": 140,
+      "height": 60
+    },
+    "D18": {
+      "width": 140,
+      "height": 60
+    },
+    "D15": {
+      "width": 140,
+      "height": 60
+    },
+    "D16": {
+      "width": 140,
+      "height": 70
+    },
+    "D17": {
+      "width": 140,
+      "height": 70
+    },
+    "D13": {
+      "width": 140,
+      "height": 60
+    },
+    "D14": {
+      "width": 140,
+      "height": 60
+    },
+    "D21": {
+      "width": 140,
+      "height": 60
+    },
+    "D20": {
+      "width": 140,
+      "height": 70
+    },
+    "D8": {
+      "width": 140,
+      "height": 70
+    },
+    "D19": {
+      "width": 140,
+      "height": 60
+    },
+    "e5fda22e-ccb3-44d6-b547-f53494cc4321": {
+      "vertices": [
+        {
+          "x": 272,
+          "y": 1523
+        }
+      ]
+    },
+    "06a89905-fa40-4818-988f-69afe6b8034b": {
+      "vertices": [
+        {
+          "x": 1539,
+          "y": 1017
+        }
+      ]
+    },
+    "3dbddebc-dcfe-4dbc-a74e-1ef99aaec116": {
+      "vertices": [
+        {
+          "x": 2123,
+          "y": 1205
+        }
+      ]
+    },
+    "1ec878a4-45cc-42fc-84aa-57c53a0cf640": {
+      "vertices": [
+        {
+          "x": 2184,
+          "y": 1302
+        }
+      ]
+    },
+    "c5f105ea-2f6c-4a85-a8f4-39895636f483": {
+      "vertices": [
+        {
+          "x": 2272,
+          "y": 1081
+        }
+      ]
+    },
+    "d0e85d2d-6cf8-438b-ada9-fc79c3832359": {
+      "vertices": [
+        {
+          "x": 1890,
+          "y": 1543
+        }
+      ]
+    },
+    "9326c4c6-d795-4bb2-801b-cf466894eb0c": {
+      "vertices": [
+        {
+          "x": 1038,
+          "y": 2018
+        }
+      ]
+    },
+    "ps": {
+      "collapsed": true
+    }
+  },
+  "tool": "pistar.2.1.0",
+  "istar": "2.0",
+  "saveDate": "Wed, 18 Nov 2026 23:39:39 GMT",
+  "diagram": {
+    "width": 3200,
+    "height": 2400,
+    "name": "UC2 SR model",
+    "customProperties": {
+      "Description": "Use Case 2 (Customer multi-vendor order, checkout and payment) Strategic Rationale model. D7 (Order fulfilled) is in the SD model only: fulfilment is outside Functionality 1 and 2. Tensions: T1 retries/pending hold hurt Seamless checkout but help Revenue protected; T2 settlement records help Traceable records but hurt Regulatory compliance (data minimisation); T3 keeping stock up to date hurts Little technical effort."
+    }
+  }
+}
